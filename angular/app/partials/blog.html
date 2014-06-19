@@ -1,0 +1,52 @@
+<div class="container">
+	<div class="page-header">
+	    <h1>Ultimos artigos</h1>
+	</div>
+	<div class="row">
+		<div class="col-md-8">
+			<div  ng-repeat="post in blog.posts">
+				<div class="media">
+				    <a class="pull-left" ng-href="/{{post.slug}}-m{{post.id}}">
+				        <img class="media-object dp img-circle" ng-src="{{ post.thumbnail }}" style="width: 100px;height:100px;">
+				    </a>
+				    <div class="media-body">
+				    	<a ng-href="/{{post.slug}}-m{{post.id}}">
+					        <h2>{{ post.title_plain }}</h2>
+					        {{ post.excerpt }}
+				        </a>
+				        <hr style="margin:8px auto">
+				        <span class="label label-default">HTML5/CSS3</span>
+				        <span class="label label-default">jQuery</span>
+				        <span class="label label-info">CakePHP</span>
+				        <span class="label label-default">Android</span>
+				    </div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4"></div>
+	</div>
+</div>
+
+<style type="text/css">
+	
+	.media
+    {
+        /*box-shadow:0px 0px 4px -2px #000;*/
+        margin: 20px 0;
+        padding:30px;
+    }
+    .dp
+    {
+        border:10px solid #eee;
+        transition: all 0.2s ease-in-out;
+    }
+    .media:hover .dp
+    {
+        border:2px solid #eee;
+        transform:rotate(360deg);
+        -ms-transform:rotate(360deg);  
+        -webkit-transform:rotate(360deg);  
+        /*-webkit-font-smoothing:antialiased;*/
+    }
+
+</style>
