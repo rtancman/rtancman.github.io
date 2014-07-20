@@ -3,7 +3,7 @@
 		<div class="col-md-8">
 			<h1>{{ article.title }}</h1>
 			<img ng-src="{{ article.thumbnail }}" style="width: 100%" />
-			{{ article.content }}
+			<any ng-bind-html="article.content"></any>
 		</div>
 		<div class="col-md-4"></div>
 	</div>

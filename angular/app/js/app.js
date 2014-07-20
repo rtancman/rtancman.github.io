@@ -14,8 +14,9 @@ angular.module('myApp', [
   'myApp.directives',
   'myApp.controllers'
 ]).
-config(['$routeProvider','$locationProvider', function($routeProvider,$locationProvider) {
-  $locationProvider.html5Mode(true).hashPrefix('!');
+config(['$routeProvider','$locationProvider','$sceProvider', function($routeProvider,$locationProvider,$sceProvider) {
+  $sceProvider.enabled(true);
+  $locationProvider.html5Mode(true);
   $routeProvider.when('/', {templateUrl: 'partials/main.html', controller: 'MainCtrl'});
   $routeProvider.when('/artigos', {templateUrl: 'partials/blog.html', controller: 'BlogCtrl', containerClass: 'blog', showNavigation: true});
   $routeProvider.when('/projetos', {templateUrl: 'partials/projects.html', controller: 'ProjectsCtrl', containerClass: 'projects', showNavigation: true});

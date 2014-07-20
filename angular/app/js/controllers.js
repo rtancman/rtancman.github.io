@@ -4,16 +4,16 @@
 
 angular.module('myApp.controllers', [])
   .controller('MainCtrl', ['$scope','$window', function($scope,$window) {
-	angular.element($window).bind("scroll", function(e) {
-		if ($window.pageYOffset > 50) {
-			$scope.fixed = true;
-		} else {
-			$scope.fixed = false;
-		}
-		$scope.$apply();
-	});
+  	angular.element($window).bind("scroll", function(e) {
+  		if ($window.pageYOffset > 50) {
+  			$scope.fixed = true;
+  		} else {
+  			$scope.fixed = false;
+  		}
+  		$scope.$apply();
+  	});
   }])
-  .controller('ArticleCtrl', ['$scope','BlogFactory','$routeParams', function($scope,BlogFactory,$routeParams) {
+  .controller('ArticleCtrl', ['$scope','BlogFactory','$routeParams','$compile', function($scope,BlogFactory,$routeParams,$compile) {
     $scope.article = [];
     function refreshItems(){
       BlogFactory.getPost($routeParams.id).then(function(data){

@@ -19,6 +19,9 @@ $dir = json_api_dir();
 @include_once "$dir/models/tag.php";
 @include_once "$dir/models/author.php";
 @include_once "$dir/models/attachment.php";
+//psr class
+@include_once "$dir/models/psrCategory.php";
+@include_once "$dir/models/psrAuthor.php";
 
 function json_api_init() {
   global $json_api;
