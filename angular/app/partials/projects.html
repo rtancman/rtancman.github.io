@@ -1,140 +1,25 @@
-<div class="container">
+<div id="rt-projects" class="container">
     <div class="page-header">
         <h1>Projetos</h1>
     </div>
-  <div id="timeline"><div class="row timeline-movement timeline-movement-top">
-    <div class="timeline-badge timeline-future-movement">
-        <a href="#">
-            <span class="glyphicon glyphicon-plus"></span>
-        </a>
-    </div>
-    <div class="timeline-badge timeline-filter-movement">
-        <a href="#">
-            <span class="glyphicon glyphicon-time"></span>
-        </a>
-    </div>
-
-</div>
-<div class="row timeline-movement">
-
-    <div class="timeline-badge">
-        <span class="timeline-balloon-date-day">18</span>
-        <span class="timeline-balloon-date-month">APR</span>
-    </div>
-
-
-    <div class="col-sm-6  timeline-item">
-        <div class="row">
-            <div class="col-sm-11">
-                <div class="timeline-panel credits">
-                    <ul class="timeline-panel-ul">
-                        <li><span class="importo">Mussum ipsum cacilds</span></li>
-                        <li><span class="causale">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </span> </li>
-                        <li><p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> 11/09/2014</small></p> </li>
-                    </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="rt-posts" ng-repeat="post in blog.posts">
+                <div class="col-md-3">
+                    <div class="rt-post-category" ng-repeat="category in post.categories">
+                        <span class="label label-default">{{ category.title }}</span>
+                    </div>
+                    <a ng-href="/{{post.slug}}-m{{post.id}}">
+                        <img ng-src="{{ post.thumbnail_images.medium.url }}" />
+                        <h2>{{ post.title_plain }}</h2>
+                        <small><span class="glyphicon glyphicon-calendar"></span> {{ post.date }}</small>
+                        <small><i class="fa fa-comment-o"></i> {{ post.comment_count }}</small>
+                    </a>
+                    <div class="rt-post-data">
+                        <p><span class="glyphicon glyphicon-user"></span></span> {{ post.author.name }}</p>
+                    </div>
                 </div>
-
             </div>
         </div>
     </div>
-
-    <div class="col-sm-6  timeline-item">
-        <div class="row">
-            <div class="col-sm-offset-1 col-sm-11">
-                <div class="timeline-panel debits">
-                    <ul class="timeline-panel-ul">
-                        <li><span class="importo">Mussum ipsum cacilds</span></li>
-                        <li><span class="causale">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </span> </li>
-                        <li><p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> 11/09/2014</small></p> </li>
-                    </ul>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--due -->
-
-<div class="row timeline-movement">
-
-
-    <div class="timeline-badge">
-        <span class="timeline-balloon-date-day">13</span>
-        <span class="timeline-balloon-date-month">APR</span>
-    </div>
-
-    <div class="col-sm-offset-6 col-sm-6  timeline-item">
-        <div class="row">
-            <div class="col-sm-offset-1 col-sm-11">
-                <div class="timeline-panel debits">
-                    <ul class="timeline-panel-ul">
-                        <li><span class="importo">Mussum ipsum cacilds</span></li>
-                        <li><span class="causale">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </span> </li>
-                        <li><p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> 11/09/2014</small></p> </li>
-                    </ul>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="col-sm-6  timeline-item">
-        <div class="row">
-            <div class="col-sm-11">
-                <div class="timeline-panel credits">
-                    <ul class="timeline-panel-ul">
-                        <li><span class="importo">Mussum ipsum cacilds</span></li>
-                        <li><span class="causale">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </span> </li>
-                        <li><p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> 11/09/2014</small></p> </li>
-                    </ul>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-
-</div>
-<div class="row timeline-movement">
-
-
-    <div class="timeline-badge">
-        <span class="timeline-balloon-date-day">10</span>
-        <span class="timeline-balloon-date-month">APR</span>
-    </div>
-
-    <div class="col-sm-offset-6 col-sm-6  timeline-item">
-        <div class="row">
-            <div class="col-sm-offset-1 col-sm-11">
-                <div class="timeline-panel debits">
-                    <ul class="timeline-panel-ul">
-                        <li><span class="importo">Mussum ipsum cacilds</span></li>
-                        <li><span class="causale">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </span> </li>
-                        <li><p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> 11/09/2014</small></p> </li>
-                    </ul>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="col-sm-6  timeline-item">
-        <div class="row">
-            <div class="col-sm-11">
-                <div class="timeline-panel credits">
-                    <ul class="timeline-panel-ul">
-                        <li><span class="importo">Mussum ipsum cacilds</span></li>
-                        <li><span class="causale">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </span> </li>
-                        <li><p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> 11/09/2014</small></p> </li>
-                    </ul>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-
-</div>
-</div>
 </div>

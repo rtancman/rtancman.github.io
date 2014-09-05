@@ -24,6 +24,7 @@ angular.module('myApp.factories', ['ngResource'])
 			var deferred = $q.defer();
 			$http({method: 'GET', url: baseUrl + '?json=get_recent_posts'}).
 			    success(function(data, status, headers, config) {
+			    	console.log(data);
 			      deferred.resolve(data);
 			    }).
 			    error(function(data, status, headers, config) {
