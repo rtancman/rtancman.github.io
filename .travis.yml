@@ -5,7 +5,7 @@ language: python
 python:
 - '3.5'
 before_install:
-- openssl aes-256-cbc -K $encrypted_36812bacabfa_key -iv $encrypted_36812bacabfa_iv -in publish-key.enc -out publish-key -d
+- openssl aes-256-cbc -K $encrypted_36812bacabfa_key -iv $encrypted_36812bacabfa_iv -in publish-key.enc -out ~/.ssh/publish-key -d
 - chmod u=rw,og= ~/.ssh/publish-key
 - echo "Host github.com" >> ~/.ssh/config
 - echo "  IdentityFile ~/.ssh/publish-key" >> ~/.ssh/config
