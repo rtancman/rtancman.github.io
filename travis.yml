@@ -1,0 +1,21 @@
+branchs:
+  only:
+  - pelican
+language: python
+python:
+- '3.5'
+install:
+- pip install -r requirements.txt
+script:
+- make publish
+notification:
+  email:
+    on_success: false
+    on_failure: false
+before_install:
+- git submodule update --remote --merge
+after_success:
+- bash deploy.sh
+#env:
+#  global:
+#    secure: gTq9EKEs0bf9fDuT3kmVsmEMu12g983oTY/0x2GhjaOVnLoW6AVJk6mfY5gpKbD1NL9j2opYxybz/KhfVrOOoK6UrQUoNuv3zsYmN5ttbJ8yGyvn5jIMPWuGMT0GlXigvRa+HdXltpzxM1dAISNeqa9Gu8nYHp6i0/uR0KXVO9iEsoeT1LTE3+zPjYp34Q1Gyl9hGWY1Oe/ET5Cqe06wyuYf7Hsd4ni0tECIHvVKKyCC+ZheB8Fjr9Nitl7YD6T8Y/bHg+y8Z9+LU9pLZ7kxQwqKHklh1lWxbkAhblGSWv47+nJAaMlJukTFTgZnh6oFhYVBwhd5TolxhagAxcrPpTEQ7ohmWeqzmC96cdtlBz9kxUJdrzafpw1Eu5WFg42sJ45hYCrvCH3nrbuRnCWOLdLOXnw6Cm5T8lz8IXgRqLbha66nkN4iTH7TqrMXI5gFp358AVGphh1cavM7oURlCzddZclhYe0D4uY3yX+/1+ap3+YqbTJCC3BKSBlpREQmKNKjKm08IcfAJN+K1lQEeJ3b8fflJlE/WEILd1BjjC1VGlQUfS40lNvtmAoOmQqb3BW0cioLN22hUyrtEAKWkss2khHCEjin+hWkQZ0gXjfzOn3i3LFiLryEjMMYjjgg8eGYs5wwfve1H7gXoofojZZHb1q4CzMZaVyfzc2NO9A=
