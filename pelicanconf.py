@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 AUTHOR = 'Raffael Tancman'
 SITENAME = 'rtancman'
 SITEURL = ''
-THEME = 'pelican-bootstrap3'
+THEME = 'pelican-bootstrap3-rtancman-yeti'
 
 PATH = 'content'
 
