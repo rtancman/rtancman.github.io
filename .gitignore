@@ -3,6 +3,8 @@
 .env
 *.sqlite3
 staticfiles
+output/*
+theme/*
 
 # pycharm
 .idea/
