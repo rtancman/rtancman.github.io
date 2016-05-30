@@ -9,12 +9,12 @@ before_install:
 - chmod u=rw,og= ~/.ssh/publish-key
 - echo "Host github.com" >> ~/.ssh/config
 - echo "  IdentityFile ~/.ssh/publish-key" >> ~/.ssh/config
-- git clone git@github.com:rtancman/pelican-bootstrap3-rtancman-yeti.git pelican-bootstrap3-rtancman-yeti
-- pelican-themes --install ./pelican-bootstrap3-rtancman-yeti
+- git clone git@github.com:rtancman/pelican-bootstrap3-rtancman-yeti.git
 - git remote set-url origin git@github.com:rtancman/rtancman.github.io.git
 - git fetch origin -f master:master
 install:
 - pip install --upgrade pip
 - pip install -r requirements.txt
+- pelican-themes --install ./pelican-bootstrap3-rtancman-yeti
 script:
 - make github
