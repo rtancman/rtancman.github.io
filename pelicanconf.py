@@ -11,7 +11,7 @@ PATH = 'content'
 
 TIMEZONE = 'America/Sao_Paulo'
 
-DEFAULT_LANG = 'br'
+DEFAULT_LANG = 'en'
 
 DATE_FORMATS = {
     'en': ('en_US','%a, %d %b %Y'),
