@@ -4,8 +4,8 @@
 *.sqlite3
 staticfiles
 output/*
+!output/.gitkeep
 theme/*
-
 # pycharm
 .idea/
 
