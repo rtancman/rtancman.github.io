@@ -5,7 +5,6 @@ language: python
 python:
 - '3.5'
 before_install:
-- git submodule update --remote --merge
 - openssl aes-256-cbc -K $encrypted_36812bacabfa_key -iv $encrypted_36812bacabfa_iv -in publish-key.enc -out ~/.ssh/publish-key -d
 - chmod u=rw,og= ~/.ssh/publish-key
 - echo "Host github.com" >> ~/.ssh/config
@@ -14,8 +13,8 @@ before_install:
 - git remote set-url origin git@github.com:rtancman/rtancman.github.io.git
 - git fetch origin -f master:master
 install:
+- git submodule update --remote --merge
 - pip install --upgrade pip
 - pip install -r requirements.txt
-- pelican-themes --install ./pelican-bootstrap3-rtancman-yeti
 script:
 - make github
