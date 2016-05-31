@@ -1,10 +1,10 @@
 Title: Olá mundo!  
-Date: 2015-06-16 17:00  
-Category:   
-Tags:   
+Date: 2015-06-16 17:00:00 
+Category: geral
+Tags: geral
 Slug: ola-mundo  
 Author: Raffael Tancman  
-Summary:
+Summary: Bem-vindo ao meu blog
 
 #Olá, mundo!
 
