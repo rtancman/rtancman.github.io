@@ -63,12 +63,12 @@ SITEMAP = {
 # Plugins
 PLUGIN_PATHS = [
     'pelican-plugins',
-    'custom-plugins'
+    # 'custom-plugins'
 ]
 
 PLUGINS = [
     'gravatar',
-    'pelican_alias', # para criar alias para artigos
+    # 'pelican_alias', # para criar alias para artigos
     'sitemap',
     'pelican_youtube',  # funciona somente com arquivos rst
     'pelican_vimeo',  # funciona somente com arquivos rst
