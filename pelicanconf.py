@@ -7,7 +7,9 @@ AUTHOR = u'Raffael Tancman'
 AUTHOR_EMAIL = u'rtancman@gmail.com'
 SITENAME = u'rtancman'
 SITEURL = 'http://rtancman.github.io'
-SITELOGO = 'http://s.gravatar.com/avatar/0115e99f9b12e4a630bcba1736967557?s=80'
+SITELOGO = 'http://s.gravatar.com/avatar/0115e99f9b12e4a630bcba1736967557?s=20'
+SITELOGO_SIZE = '20px'
+HIDE_SITENAME = True
 
 GITHUB_URL = 'https://github.com/rtancman'
 DISQUS_SITENAME = 'rtancman'
