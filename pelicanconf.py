@@ -23,11 +23,6 @@ TIMEZONE = 'America/Sao_Paulo'
 
 DEFAULT_LANG = u'pt'
 
-DATE_FORMATS = {
-    'en': ('en_US','%a, %d %b %Y'),
-    'pt': ('pt_BR','%d/%m/%Y'),
-}
-
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
 CATEGORY_FEED_ATOM = None
