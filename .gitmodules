@@ -1,0 +1,8 @@
+[submodule "pelican-plugins"]
+    path = pelican-plugins
+    url = https://github.com/getpelican/pelican-plugins.git
+    branch = master
+
+[submodule "theme"]
+    path = theme
+    url = https://github.com/rtancman/pelican-bootstrap3-rtancman-yeti.git
