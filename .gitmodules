@@ -1,6 +1,6 @@
 [submodule "theme"]
 	path = theme
-	url = https://github.com/rtancman/pelican-bootstrap3-rtancman-yeti.git
+	url = https://github.com/rtancman/pelican-bootstrap3-rtancman.git
 [submodule "pelican-plugins"]
 	path = pelican-plugins
 	url = https://github.com/getpelican/pelican-plugins.git

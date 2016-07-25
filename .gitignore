@@ -1,6 +1,9 @@
 # meusite
 .rtancman.github.io/
+.venv
 .env
+pelican.pid
+srv.pid
 *.sqlite3
 staticfiles
 output/*
