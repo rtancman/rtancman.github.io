@@ -3,4 +3,5 @@ Markdown==2.6.6
 ghp-import==0.4.1
 pelican-youtube==0.2.0
 pelican-vimeo==0.1.1
+awesome-slugify==1.6.5
 -e git+https://github.com/luzfcb/pelican-alias.git@fix-wrong-alias-filename-output#egg=pelican-alias

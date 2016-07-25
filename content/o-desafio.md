@@ -1,6 +1,7 @@
 Title: O Desafio
-Img: /theme/images/common/banner.jpg
-Date: 2015-06-16 00:00:00 
+Class: rtc-title-bg-white
+Img: /images/articles/odesafio.jpg
+Date: 2015-06-17 00:00:00 
 Category: O desafio dos 10 anos
 Tags: Geral
 Slug: o-desafio 

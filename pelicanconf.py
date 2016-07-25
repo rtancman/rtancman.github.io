@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
-
+from slugify import slugify
 
 AUTHOR = u'Raffael Tancman'
 AUTHOR_EMAIL = u'rtancman@gmail.com'
@@ -56,7 +56,7 @@ DISPLAY_ARTICLE_INFO_ON_INDEX = True
 DISQUS_DISPLAY_COUNTS = True
 
 # Caregories
-CATEGORY_BANNER_IMG = u'/theme/images/common/banner.jpg'
+CATEGORY_BANNER_IMG = u'/images/categories/odesafio10anos.jpg'
 CATEGORY_BANNER_SUBTITLE = u'Veja todos os posts desta categoria.'
 
 TIMEZONE = 'America/Sao_Paulo'
@@ -127,3 +127,10 @@ RELATIVE_URLS = True
 
 # Geracao de PDF
 # PDF_GENERATOR = True
+
+
+def makeimgbanner(category=''):
+    return '/images/categories/' + slugify(str(category)) + '.jpg'
+
+
+JINJA_FILTERS = {'imgbanner':makeimgbanner}
