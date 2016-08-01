@@ -11,7 +11,7 @@ AUTHOR_MAPS = u'https://www.google.com.br/maps/place/R.+Manhua%C3%A7u+-+Vargem+G
 AUTHOR_MAPS_EMBED = u'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3673.163528563044!2d-43.49720548503303!3d-22.9810133849741!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9be7906db9a8c3%3A0x50b9b9d955b5aff2!2sR.+Manhua%C3%A7u+-+Vargem+Grande%2C+Rio+de+Janeiro+-+RJ!5e0!3m2!1spt-BR!2sbr!4v1469383607808"'
 
 SITENAME = u'rtancman'
-SITEURL = 'http://rtancman.github.io/'
+SITEURL = 'http://rtancman.com.br/'
 SITELOGO = 'http://s.gravatar.com/avatar/0115e99f9b12e4a630bcba1736967557?s=20'
 SITELOGO_SIZE = '20px'
 HIDE_SITENAME = False
@@ -50,6 +50,7 @@ ABOUT_ME_RECOMENDS_LIST = [
 
 GOOGLE_ANALYTICS = ''
 FACEBOOK_APPID = ''
+GOOGLE_TAGMANAGER = 'GTM-RZN9'
 
 # Articles
 DISPLAY_ARTICLE_INFO_ON_INDEX = True
