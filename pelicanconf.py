@@ -13,7 +13,7 @@ AUTHOR_MAPS_EMBED = u'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3673
 SITENAME = u'rtancman'
 SITEURL = 'http://rtancman.com.br/'
 SITELOGO = 'http://s.gravatar.com/avatar/0115e99f9b12e4a630bcba1736967557?s=20'
-FAVICON = 'http://s.gravatar.com/avatar/0115e99f9b12e4a630bcba1736967557?s=20'
+FAVICON = '/images/common/favicon.png'
 SITELOGO_SIZE = '20px'
 HIDE_SITENAME = False
 
