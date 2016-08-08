@@ -1,6 +1,6 @@
 Title: O Desafio
 Class: rtc-title-bg-white
-Img: /images/articles/odesafio.jpg
+Img: /images/articles/2015/06/odesafio.jpg
 Date: 2015-06-17 00:00:00 
 Category: O desafio dos 10 anos
 Tags: Geral
@@ -14,7 +14,7 @@ Voltando a 2015, depois do carnaval ( lógico ) o ano começou. Mas o mais inter
 
 O primeiro livro “a ser lido” foi um audiobook do [Pai Rico, Pai Pobre](https://pt.wikipedia.org/wiki/Pai_Rico,_Pai_Pobre) de Robert Kiyosaki e Sharon Lechter. A minha sensação foi já conhecida da galera mas vou colocar novamente 😉
 
-[![blowmymind](http://rtancman.com.br/wp-content/uploads/2015/06/blowmymind.gif)](http://rtancman.com.br/wp-content/uploads/2015/06/blowmymind.gif)
+[![blowmymind](http://rtancman.com.br/images/articles/2015/06/blowmymind.gif)](http://rtancman.com.br/images/articles/2015/06/blowmymind.gif)
 
 Desde então fikei alucinado pelo assunto e logo começamos a filosofar mais e mais e mais… Escutei ele 2x e a partir do cap. 9 escutei mais 3x somente ele. Após trocar muito sobre este assunto comecei a listar quais seriam os próximos passos e logo vieram muitos e não param de aparecer mais e mais. Nunca tinha me sentido tão vivo e logo mais livros apareceram, palestras, sites e muitas conversas no famoso [Armazem do Café](http://www.armazemdocafe.com.br/) .
 
@@ -22,7 +22,7 @@ O medo foi superado e acabei criando o meu primeiro blog este aqui para ajudar m
 
 Mandei um email para o Tancman que esta no futuro e ele deve estar muito feliz lendo esta msg agora.
 
-[![Msg para o futuro 2026](http://rtancman.com.br/wp-content/uploads/2015/06/Captura-de-Tela-2015-06-15-às-22.17.58-300x284.png)](http://rtancman.com.br/wp-content/uploads/2015/06/Captura-de-Tela-2015-06-15-às-22.17.58.png)
+[![Msg para o futuro 2026](http://rtancman.com.br/images/articles/2015/06/msgfuturoraffaeltancman.png)](http://rtancman.com.br/images/articles/2015/06/msgfuturoraffaeltancman.png)
 
 Agora a minha ideia vai ser contar o meu dia a dia até chegar 16 de Junho de 2026\. E pra quem ainda não sabe o caminho ou ainda não tem ideia de sair da “Corrida dos Ratos” estou a disposição para estar junto com vc nesta nova jornada de vida 😉
 
