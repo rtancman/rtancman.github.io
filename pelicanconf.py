@@ -33,7 +33,7 @@ BANNER_LINK_LABEL = u'Saiba Mais'
 DEFAULT_BANNER_LINK_LABEL = u'Ir para o conteúdo'
 BANNER_LOGO = 'http://s.gravatar.com/avatar/0115e99f9b12e4a630bcba1736967557?s=50'
 
-ABOUT_ME = 'Olá sou Raffael Tancman, carioca, desenvolvedor poliglota. Trabalho com web desde 2008 e atualmente estou no M4U. Sou gamer e apaixonado por LOL. Além disso gosto de pegar ondas sempre que possível.'
+ABOUT_ME = 'Olá sou Raffael Tancman, carioca, desenvolvedor poliglota. Trabalho com web desde 2008 e atualmente estou na globo.com. Sou gamer e apaixonado por LOL. Além disso gosto de pegar ondas sempre que possível.'
 ABOUT_ME_RECOMENDS = True
 ABOUT_ME_RECOMENDS_LIST = [
     [
