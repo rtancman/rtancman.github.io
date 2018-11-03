@@ -35,29 +35,14 @@ layout: default
 
       {% if page.comments %}
       <div id="disqus_thread"></div>
-      <div class="related">
-        <h3>Related Posts</h3>
-        {% assign firstCategory = page.categories | first %}
-        {% assign relatedCount = 0 %}
-        {% for related in site.categories[firstCategory] %}
-            {% unless page.permalink == related.permalink %}
-                {% assign relatedCount = relatedCount | plus: 1 %}
-                <a href="{{related.permalink}}">{{ related.title }}</a>
-            {% endunless %}
-    
-            {% if relatedCount == 3 %}
-                {% break %}
-            {% endif %}
-        {% endfor %}
-    </div>
       <script>
       /**
       *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
       *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
       
       var disqus_config = function () {
-      this.page.url = '{{ site.url }}';  // Replace PAGE_URL with your page's canonical URL variable
-      this.page.identifier = '{{ page.url }}'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = '{{ site.url }}{{ page.url }}';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = '{{ site.url }}{{ page.url }}'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
       };
 
       (function() { // DON'T EDIT BELOW THIS LINE
