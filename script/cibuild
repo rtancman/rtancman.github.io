@@ -1,2 +1,2 @@
 install: bundle install
-script: jekyll build && htmlproofer ./_site
+script: jekyll build

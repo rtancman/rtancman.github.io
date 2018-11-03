@@ -14,8 +14,8 @@ gem "jekyll", "~> 3.7.4"
 gem "minima", "~> 2.5.0"
 gem "jekyll-theme-clean-blog"
 
-gem 'htmlproofer'
-gem 'github-pages', :branch => 'master', :git => 'git://github.com/github/pages-gem'
+gem 'html-proofer', '~> 3.4'
+gem 'github-pages'
 
 # If you have any plugins, put them here!
 group :jekyll_plugins do
