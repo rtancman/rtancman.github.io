@@ -16,7 +16,7 @@ gem "jekyll-theme-clean-blog"
 
 # If you have any plugins, put them here!
 group :jekyll_plugins do
-  gem "github-pages"
+  gem 'github-pages', :branch => 'master', :git => 'git://github.com/github/pages-gem'
   gem "jekyll-feed", "~> 0.9"
   gem "jekyll-paginate", "~> 1.1.0"
 end
