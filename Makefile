@@ -1,6 +1,6 @@
 setup:
 	gem install bundler jekyll
-	cd blog && bundle install
+	bundle install
 
 run:
-	cd blog && bundle exec jekyll serve
+	bundle exec jekyll serve

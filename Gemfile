@@ -14,9 +14,11 @@ gem "jekyll", "~> 3.7.4"
 gem "minima", "~> 2.5.0"
 gem "jekyll-theme-clean-blog"
 
+gem 'htmlproofer'
+gem 'github-pages', :branch => 'master', :git => 'git://github.com/github/pages-gem'
+
 # If you have any plugins, put them here!
 group :jekyll_plugins do
-  gem 'github-pages', :branch => 'master', :git => 'git://github.com/github/pages-gem'
   gem "jekyll-feed", "~> 0.9"
   gem "jekyll-paginate", "~> 1.1.0"
 end

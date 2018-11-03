@@ -1,3 +1,9 @@
+_site
+node_modules
+Gemfile.lock
+.sass-cache
+*.gem
+
 # meusite
 .rtancman.github.io/
 .venv
