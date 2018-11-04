@@ -25,6 +25,7 @@ twitter_username: rtancman
 github_username:  rtancman
 facebook_username: rtancman
 linkedin_username: rtancman
+facebook_app_id: 246280775508572
 
 # Build settings
 markdown: kramdown
