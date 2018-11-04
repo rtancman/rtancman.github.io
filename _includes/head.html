@@ -23,6 +23,25 @@
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ "/feed.xml" | relative_url }}">
   
+  <meta property="og:url" content="{{ page.url | replace:'index.html','' | absolute_url }}" />
+  <meta property="og:type" content="website" />
+  {% if page.title %}
+    <meta property="og:title" content="{{ page.title | escape }} - {{ site.title | escape }}" />
+    {% if page.subtitle %}
+      <meta property="og:description" content="{{ page.subtitle }}" />
+    {% endif %}
+    {% if page.background %}
+      <meta property="og:image" content="{{ site.cdn_url }}{{ page.background }}" />
+    {% endif %}
+  {% else %}
+    <meta property="og:title" content="{{ site.title | escape }}" />
+    {% if site.description %}
+      <meta property="og:description" content="{{ site.description }}" />
+    {% endif %}
+    {% if site.background %}
+      <meta property="og:image" content="{{ site.cdn_url }}{{ page.background }}" />
+    {% endif %}
+  {% endif %}
 
   <script type="text/javascript" async src="https://d335luupugsy2.cloudfront.net/js/loader-scripts/4ede0e77-2bea-48a2-ba63-5b64cae6f6fe-loader.js" ></script>
   <!-- Google Tag Manager -->
@@ -32,4 +51,25 @@
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer','GTM-RZN9');</script>
   <!-- End Google Tag Manager -->
+  <!-- Facebook -->
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '{{ site.facebook_app_id }}',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v3.2'
+      });
+      FB.AppEvents.logPageView();   
+    };
+  
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+  <!-- End Facebook -->
 </head>
