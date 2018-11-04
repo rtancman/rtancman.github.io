@@ -19,7 +19,8 @@ author: Raffael Tancman
 description: >- # this means to ignore newlines until "baseurl:"
   Carioca, Bodyboarder, gamer #apaixonadoPorLOL e desenvolvedor poliglota. Trabalho com web desde 2008 e atualmente estou na Resultados Digitais.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://rtancman.com.br" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://www.rtancman.com.br" # the base hostname & protocol for your site, e.g. http://example.com
+cdn_url: "https://www.rtancman.com.br"
 twitter_username: rtancman
 github_username:  rtancman
 facebook_username: rtancman

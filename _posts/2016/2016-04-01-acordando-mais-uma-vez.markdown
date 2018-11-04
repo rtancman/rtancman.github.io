@@ -39,12 +39,12 @@ Fiz uma planilha para contabilizar se o que eu fosse fazer o que estou prestes a
 
 Eu estou incluindo nesse post uma meta diária minha de assistir esses videos até a minha resposta chegar. São eles:
 
-<iframe class="youtube-player" type="text/html" width="640" height="390" src="http://www.youtube.com/embed/aDLj9s_GF3A?version=3&amp;rel=1&amp;fs=1&amp;autohide=2&amp;showsearch=0&amp;showinfo=1&amp;iv_load_policy=1&amp;start=540&amp;wmode=transparent" frameborder="0" allowfullscreen="true"></iframe>
+<iframe class="youtube-player" type="text/html" width="640" height="390" src="https://www.youtube.com/embed/aDLj9s_GF3A?version=3&amp;rel=1&amp;fs=1&amp;autohide=2&amp;showsearch=0&amp;showinfo=1&amp;iv_load_policy=1&amp;start=540&amp;wmode=transparent" frameborder="0" allowfullscreen="true"></iframe>
 
-<iframe class="youtube-player" type="text/html" width="640" height="390" src="http://www.youtube.com/embed/aDLj9s_GF3A?version=3&amp;rel=1&amp;fs=1&amp;autohide=2&amp;showsearch=0&amp;showinfo=1&amp;iv_load_policy=1&amp;start=721&amp;wmode=transparent" frameborder="0" allowfullscreen="true"></iframe>
+<iframe class="youtube-player" type="text/html" width="640" height="390" src="https://www.youtube.com/embed/aDLj9s_GF3A?version=3&amp;rel=1&amp;fs=1&amp;autohide=2&amp;showsearch=0&amp;showinfo=1&amp;iv_load_policy=1&amp;start=721&amp;wmode=transparent" frameborder="0" allowfullscreen="true"></iframe>
 
-<iframe class="youtube-player" type="text/html" width="640" height="390" src="http://www.youtube.com/embed/JkWFJULTuHc?version=3&amp;rel=1&amp;fs=1&amp;autohide=2&amp;showsearch=0&amp;showinfo=1&amp;iv_load_policy=1&amp;wmode=transparent" frameborder="0" allowfullscreen="true"></iframe>
+<iframe class="youtube-player" type="text/html" width="640" height="390" src="https://www.youtube.com/embed/JkWFJULTuHc?version=3&amp;rel=1&amp;fs=1&amp;autohide=2&amp;showsearch=0&amp;showinfo=1&amp;iv_load_policy=1&amp;wmode=transparent" frameborder="0" allowfullscreen="true"></iframe>
 
-<iframe class="youtube-player" type="text/html" width="640" height="390" src="http://www.youtube.com/embed/xW1HA1Rp8ms?version=3&amp;rel=1&amp;fs=1&amp;autohide=2&amp;showsearch=0&amp;showinfo=1&amp;iv_load_policy=1&amp;wmode=transparent" frameborder="0" allowfullscreen="true"></iframe>
+<iframe class="youtube-player" type="text/html" width="640" height="390" src="https://www.youtube.com/embed/xW1HA1Rp8ms?version=3&amp;rel=1&amp;fs=1&amp;autohide=2&amp;showsearch=0&amp;showinfo=1&amp;iv_load_policy=1&amp;wmode=transparent" frameborder="0" allowfullscreen="true"></iframe>
 
 Estes são os videos para não deixar eu voltar a mesmice do dia a dia se vc tiver outros coloquem nos comentarios e mais uma vez muito obrigado vida!
