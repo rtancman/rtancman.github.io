@@ -32,6 +32,7 @@ markdown: kramdown
 theme: jekyll-theme-clean-blog
 paginate: 5
 paginate_path: "/posts/page:num/"
+highlighter: rouge
 
 permalink: /:categories/:title:output_ext
 

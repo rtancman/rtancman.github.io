@@ -1,6 +1,16 @@
 // Import Core Clean Blog SCSS
 @import "../assets/vendor/startbootstrap-clean-blog/scss/clean-blog.scss";
+@import "./monokai.scss";
 
 .share-bar-container .share-button a {
   display: initial;
+}
+
+.highlighter-rouge {
+  .highlight {
+    border-radius: 5px;
+    pre {
+      padding: 10px;
+    }
+  }
 }

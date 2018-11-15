@@ -16,6 +16,7 @@ gem "jekyll-theme-clean-blog"
 
 gem 'html-proofer', '~> 3.4'
 gem 'github-pages'
+gem 'rouge'
 
 # If you have any plugins, put them here!
 group :jekyll_plugins do
