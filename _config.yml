@@ -51,6 +51,9 @@ defaults:
 plugins:
   - jekyll-feed
   - jekyll-paginate
+  - jekyll-youtube
+  - jekyll-gist
+
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
 # to override the default setting.
