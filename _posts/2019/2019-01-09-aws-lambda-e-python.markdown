@@ -343,7 +343,9 @@ Para facilitar também criei este [gist no github](https://gist.github.com/rtanc
 
 {% gist 240e67545a4dbde5107cd1dd09df014b %}
 
-Neste post procurei mostrar o funcionamento básico do lambda e as diversas formas que podemos manipular as nossas funções que podem ser feitas via console da AWS ou utilizando o utilitário awscli. Fique ligado que nos próximos posts vou mostrar como podemos otimizar toda essa configuração utilizando o framework [apex](http://apex.run/).
+Neste post procurei mostrar o funcionamento básico do lambda e as diversas formas que podemos manipular as nossas funções que podem ser feitas via console da AWS ou utilizando o utilitário awscli. Fique ligado que nos próximos posts vou mostrar como podemos otimizar toda essa configuração utilizando o framework [apex](http://apex.run/). 
+
+Veja como [organizar o ambiente de trabalho com apex.run e entenda as pegadinhas em utilizar Python no AWS Lambda.](/python/aws/organizando-aws-lambda-escrito-python.html) 
 
 Comente sobre o que você achou desse post e me conte o você quer saber ou fazer utilizando Python e Lambdas.
 
