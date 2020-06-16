@@ -34,7 +34,7 @@ Agora precisamos instalar o nosso ambiente de trabalho que basicamente vai preci
 
 ### Instalação:
 
-Vamos precisar instalar o [kubectl](http://kubernetes.io/docs/tasks/tools/install-kubectl/) um cluster local, que eu recomendo ser o [minikube](http://github.com/kubernetes/minikube#installation) para quem tem linux e para mac o próprio docker já tem um suporte para subir um cluster k8s.
+Vamos precisar instalar o [kubectl](http://kubernetes.io/docs/tasks/tools/install-kubectl/) e o [minikube](http://github.com/kubernetes/minikube#installation) para quem tem linux. No  mac, o próprio docker já tem um suporte para subir um cluster k8s. Caso você esteja rodando no mac, segue um tutorial de como levantar um cluster local [nesse link aqui](https://xebia.com/blog/running-kubernetes-locally-docker-mac-os-x/).
 
 -   Kubectl: É o CLI para iteragir com o cluster k8s.
 -   Minikube: Simula em uma VM o funcionamento de um cluster k8s em ambiente local.
@@ -43,7 +43,6 @@ Para você já sair executando os comandos do kubectl recomendo esses playground
 -   [Katacoda](https://www.katacoda.com/courses/kubernetes/playground)
 -   [Play with Kubernetes](https://labs.play-with-k8s.com/)
 
-Além disso, caso você esteja rodando no mac segue um tutorial de como levantar um cluster local [nesse link aqui](https://xebia.com/blog/running-kubernetes-locally-docker-mac-os-x/).
 
 Agora que já temos um um cluster rodando, vamos iniciar dar uma explorada nos principais comandos do k8s que vamos utilizar durante o desenvolvimento.
 
@@ -68,7 +67,7 @@ Esses passos são importantes principalmente se você já tem acesso a um cluste
 
 ### K8S em prática com um pod simples
 
-Vamos subir agora um Pod com o Wordpress baseado em uma imagem do Docker que está disponível no [hub.docker.com/_/wordpress/](https://hub.docker.com/_/wordpress/) para testar alguns dos comandos do k8s. Não se preocupe com o arquivo abaixo vamos entender ele melhor mais a frente ;)
+Vamos subir agora um Pod com o Wordpress baseado em uma imagem do Docker que está disponível no [hub docker do wordpress](https://hub.docker.com/_/wordpress/) para testar alguns dos comandos do k8s. Não se preocupe com o arquivo abaixo vamos entender ele melhor mais a frente ;)
 
 Crie o arquivo wp-dumb.yaml com o seguinte conteudo abaixo:
 ```yaml
