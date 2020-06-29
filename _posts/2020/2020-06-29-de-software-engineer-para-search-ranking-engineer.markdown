@@ -61,4 +61,8 @@ Nos próximos posts vou falar sobre o elasticsearch. Vamos ver porquê e como de
 
 Este post é uma introdução no assunto de RI e provavelmente na medida do possível irei continuar postando outros conteúdos relacionados sobre o que estou estudando no momento.
 
+
+[VEJA O POST: Elasticsearch como ferramenta de busca
+](/information-retrieval/elasticsearch-como-ferramenta-de-busca.html)
+
 Grande abraço!
