@@ -9,6 +9,8 @@ comments: true
 shareBar: true
 categories:
     - "python"
+redirect_from:
+  - /python/Quero-programar-por-onde-comecar.html
 ---
 
 

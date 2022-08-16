@@ -3,6 +3,8 @@ node_modules
 Gemfile.lock
 .sass-cache
 *.gem
+.bundle/
+.jekyll-cache/
 
 # meusite
 .rtancman.github.io/
