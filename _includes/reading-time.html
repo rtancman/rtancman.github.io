@@ -1,0 +1,6 @@
+{% capture words %}
+{{ content | number_of_words | minus: 180 }}
+{% endcapture %}
+{% unless words contains '-' %}
+<span><i class="fa fa-clock-o fa-inverse" aria-hidden="true"></i> {{ words | plus: 180 | divided_by: 180 | append: ' min de leitura' }}</span>
+{% endunless %}
