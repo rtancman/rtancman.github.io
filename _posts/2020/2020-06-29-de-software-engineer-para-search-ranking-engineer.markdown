@@ -8,7 +8,9 @@ background: '/img/posts/2020/06/de-software-engineer-para-search-ranking-enginee
 comments: true
 shareBar: true
 categories:
-    - "information-retrieval"
+    - "carreira"
+redirect_from:
+  - /information-retrieval/de-software-engineer-para-search-ranking-engineer.html
 ---
 
 Sempre trabalhei como desenvolvedor fullstack e me lembro como se fosse hoje quando recebi a minha primeira oportunidade na "A Resistência". Neste momento eu iniciava a minha jornada como profissional de tecnologia. Na maior parte das empresas em que trabalhei tive a oportunidade de trabalhar em diversas áreas sendo backend, frontend, dba e operações. Com isso, acabei adquirindo uma experiência em diversas áreas. Porém, nos últimos 4 anos passei a trabalhar como software engineer. A convite na minha atual empresa, troquei de time integrando o de busca.

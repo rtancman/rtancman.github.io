@@ -8,9 +8,10 @@ background: '/img/posts/2020/06/quero-programar-por-onde-comecar.jpg'
 comments: true
 shareBar: true
 categories:
-    - "python"
+    - "carreira"
 redirect_from:
   - /python/Quero-programar-por-onde-comecar.html
+  - /python/quero-programar-por-onde-comecar.html
 ---
 
 
