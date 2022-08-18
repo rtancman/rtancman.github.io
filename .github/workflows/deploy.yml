@@ -1,9 +1,9 @@
-name: Build and deploy Jekyll site to GitHub Pages
+name: deploy
 
 on:
   push:
     branches:
-      - jekyll # or master before October 2020
+      - jekyll
 
 jobs:
   github-pages:
@@ -16,7 +16,7 @@ jobs:
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile') }}
           restore-keys: |
             ${{ runner.os }}-gems-
-      - uses: helaili/jekyll-action@2.0.5    # Choose any one of the Jekyll Actions
-        with:                                # Some relative inputs of your action
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: helaili/jekyll-action@2.0.5
+        with:
+          token: ${{ secrets.GH_PAGES_GITHUB_TOKEN }}
           branch: "master"
