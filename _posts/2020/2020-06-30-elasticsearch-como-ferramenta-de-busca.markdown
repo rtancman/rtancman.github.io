@@ -8,7 +8,9 @@ background: '/img/posts/2020/06/elasticsearch-como-ferramenta-de-busca.jpg'
 comments: true
 shareBar: true
 categories:
-    - "information-retrieval"
+    - "elasticsearch"
+redirect_from:
+  - /information-retrieval/elasticsearch-como-ferramenta-de-busca.html
 ---
 
 Boa parte dos sistemas tem uma ferramenta de busca e a forma como a mesma é implementada pode variar. Faz sentido utilizar o banco de dados atual da aplicação e começar a aplicar algumas features de busca, mas isso pode ser um tiro no pé quando você quer de fato entregar o melhor documento dada uma determinada busca. Nesses casos, o elasticsearch é a ferramenta que vai trazer documentos relevantes para um resultado de busca. Vamos entender nesse artigo o que é essa ferramenta e executar os principais comandos do dia a dia. No final iremos subir um cluster no docker e ver a parte de monitoramento utilizando o kibana.
