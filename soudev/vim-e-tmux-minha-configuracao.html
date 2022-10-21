@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    Vim e tmux - Raffael Tancman
+    
+  </title>
+
+  <link rel="icon" type="image/png" href="/img/favicon.png" />
+  
+    <meta property="description" content="Minha configuração de trabalho." />
+  
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/vendor/share-bar/css/share.bar.min.css">
+  
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://www.rtancman.com.br/soudev/vim-e-tmux-minha-configuracao.html">
+  <link rel="alternate" type="application/rss+xml" title="Raffael Tancman" href="/feed.xml">
+  
+  <meta property="og:url" content="https://www.rtancman.com.br/soudev/vim-e-tmux-minha-configuracao.html" />
+  <meta property="og:type" content="website" />
+  
+    <meta property="og:title" content="Vim e tmux - Raffael Tancman" />
+    
+      <meta property="og:description" content="Minha configuração de trabalho." />
+    
+    
+      <meta property="og:image" content="https://www.rtancman.com.br/img/posts/2018/11/vim-e-tmux-minha-configuracao.jpg" />
+    
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-RZN9');</script>
+  <!-- End Google Tag Manager -->
+  <!-- Facebook -->
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '246280775508572',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v3.2'
+      });
+      FB.AppEvents.logPageView();   
+    };
+  
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+  <!-- End Facebook -->
+</head>
+
+
+  <body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">Raffael Tancman</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+    <!-- Page Header -->
+
+<header class="masthead" style="background-image: url('/img/posts/2018/11/vim-e-tmux-minha-configuracao.jpg')">
+
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-heading">
+          <h1>Vim e tmux</h1>
+          
+          <h2 class="subheading">Minha configuração de trabalho.</h2>
+          
+          <span class="meta">Posted by <a href="/about">Raffael Tancman</a> on November 23, 2018</span>
+          
+
+<span><i class="fa fa-clock-o fa-inverse" aria-hidden="true"></i> 5 min de leitura</span>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container container-posts">
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      <div class="share-bar" data-url="https://www.rtancman.com.br/soudev/vim-e-tmux-minha-configuracao.html" data-title="Vim e tmux" data-image-url="https://www.rtancman.com.br/img/posts/2018/11/vim-e-tmux-minha-configuracao.jpg" data-hashtags="#rtancman" style="width: 100%"></div>
+
+      <p>Sempre programando com outras ferramentas de fato resolvi dar uma chance ao <a href="https://en.wikipedia.org/wiki/Vim_(text_editor)">Vim</a>. Com os plugins ele vira uma baita de uma ferramenta para se trabalhar. Sobre o <a href="https://en.wikipedia.org/wiki/Tmux">tmux</a> foi um caso de amor e ódio. Comecei acompanhar os amigos aqui do time quando estávamos “pareando” e resolvi de fato testar no dia a dia.</p>
+
+<h2 id="vim">Vim</h2>
+
+<p>Wiki: <a href="https://en.wikipedia.org/wiki/Vim_(text_editor)">https://en.wikipedia.org/wiki/Vim_(text_editor)</a></p>
+
+<p>É um editor de texto clonado a partir do <a href="https://pt.wikipedia.org/wiki/Vi">Vi</a> que pode ser utilizado tanto no terminal ou como uma aplicação gráfica como no gvim além de ser um software livre de código aberto.</p>
+
+<p>Para aprender sobre o vim recomendo os seguintes sites:</p>
+
+<ul>
+  <li>
+    <p><a href="https://thoughtbot.com/upcase/vim">https://thoughtbot.com/upcase/vim</a></p>
+  </li>
+  <li>
+    <p><a href="https://vim-adventures.com/">https://vim-adventures.com/</a></p>
+  </li>
+</ul>
+
+<p>A parte que eu gosto desse editor a sua simplicidade, leveza e o além de facilmente rodar a minha configuração em um servidor ou em outra máquina. Outro ponto favorável é sua gama de plugins. Neste site <a href="https://vimawesome.com/">vim awesome</a> você consegue buscar e encontrar plugins. Esta parte pode se tornar um pouco trabalhosa e por este motivo eu comecei configurando o meu Vim com base no projeto <a href="https://vim-bootstrap.com/">vim-bootstrap</a>. Este projeto facilita a configuração sugerindo plugins ideias a várias linguagem de programação.</p>
+
+<p>Toda sua configuração do vim fica em um arquivo na sua home que é o ~/.vimrc . <a href="https://github.com/rtancman/dotfiles/blob/master/sh/common/vim-bootstrap/main.sh">Aqui</a> eu acabei automatizando esse processo de instalação do vim-bootsrap onde ele gera essas configurações e salva no .vimrc na home da sua máquina. Além desse arquivo eu crio mais 2 arquivos que são os ~/.vimrc.local e o ~/.vimrc.local.bundles . Eu gerei estes arquivos para facilitar a alteração de algumas configurações além do vim-bootstrap sem correr o risco de um sobrescrever o outro.</p>
+
+<p>Conteúdo do meu ~/.vimrc.local
+Neste arquivo eu coloco outras configurações para o meu vim além das que existem no ~/.vimrc.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>" Config
+" set relativenumber
+set nrformats+=alpha
+let g:NERDTreeMapOpenInTabSilent = 'T'
+
+" Ruby Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 1
+let g:syntastic_ruby_checkers = ['rubocop', 'reek']
+let g:vimrubocop_config = '.rubocop.yml'
+let g:reek_on_loading = 0
+
+" Remove Trailing Whitespace
+nnoremap &lt;silent&gt; &lt;F5&gt; :let _s=@/ &lt;Bar&gt; :%s/\s\+$//e &lt;Bar&gt; :let @/=_s &lt;Bar&gt; :nohl &lt;Bar&gt; :unlet _s &lt;CR&gt;
+
+" vim-javascript
+augroup vimrc-javascript
+autocmd!
+autocmd FileType javascript,javascript.jsx set tabstop=2|set shiftwidth=2|set expandtab softtabstop=2
+augroup END
+
+" Vim autoresize
+autocmd VimResized * :wincmd =
+" zoom a vim pane, &lt;C-w&gt;= to re-balance
+nnoremap &lt;leader&gt;- :wincmd _&lt;cr&gt;:wincmd \|&lt;cr&gt;
+nnoremap &lt;leader&gt;= :wincmd =&lt;cr&gt;
+</code></pre></div></div>
+
+<p>Conteúdo do meu ~/.vimrc.local.bundles
+Neste arquivo eu inclou outros plugins além das que existem no ~/.vimrc.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>" Plugins
+Plug 'wakatime/vim-wakatime'
+Plug 'ngmy/vim-rubocop'
+Plug 'rainerborene/vim-reek'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'mxw/vim-jsx'
+" Plug 'w0rp/ale'
+Plug 'christoomey/vim-tmux-navigator'
+</code></pre></div></div>
+
+<h2 id="tmux">Tmux</h2>
+
+<p>É um multiplexador de terminais para sistemas Unix like. Ou seja conseguimos abrir vários terminais no mesmo terminal. Além disso, conseguimos “salvar” o estado atual de cada sessão aberta no terminal e retomar de onde paramos. No nosso dia a dia abrimos varios terminais para executar diversas ações e é ae que o tmux entra para facilitar a sua vida. Ele se torna uma ferramenta muito poderosa usada em conjunto com o Vim.</p>
+
+<p>Para aprender sobre o tmux recomendo os seguintes sites:</p>
+
+<ul>
+  <li>
+    <p><a href="https://thoughtbot.com/upcase/tmux">https://thoughtbot.com/upcase/tmux</a></p>
+  </li>
+  <li>
+    <p><a href="https://gist.github.com/henrik/1967800">https://gist.github.com/henrik/1967800</a></p>
+  </li>
+  <li>
+    <p><a href="https://lukaszwrobel.pl/blog/tmux-tutorial-split-terminal-windows-easily/">https://lukaszwrobel.pl/blog/tmux-tutorial-split-terminal-windows-easily/</a></p>
+  </li>
+</ul>
+
+<p>Como o vim ele suporta diversas configurações e isso que faz ele ficar bem produtivo no seu dia a dia. Abaixo eu estou compartilhando as minhas que acabei adotando após finalizar o curso da Upcase.</p>
+
+<p>Conteúdo do meu ~/.tmux.conf</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unbind C-b
+set -g prefix C-s
+set -g base-index 1
+set -g renumber-windows on
+bind-key -r C-s send-prefix
+bind-key r source-file ~/.tmux.conf \; display-message "~/.tmux.conf reloaded"
+set-option -g default-terminal "screen-256color"
+set-option -g status-keys "emacs"
+#set-option -g status-bg '#666666'
+#set-option -g status-fg '#aaaaaa'
+set-option -g status-left-length 50
+set-option -g status-right " #(date '+%a, %b %d - %I:%M') "
+bind-key - split-window -v -c '#{pane_current_path}'
+bind-key \ split-window -h -c '#{pane_current_path}'
+
+# Fine adjustment (1 or 2 cursor cells per bump)
+bind -n S-Left resize-pane -L 2
+bind -n S-Right resize-pane -R 2
+bind -n S-Down resize-pane -D 1
+bind -n S-Up resize-pane -U 1
+
+# Coarse adjustment (5 or 10 cursor cells per bump)
+bind -n C-Left resize-pane -L 10
+bind -n C-Right resize-pane -R 10
+bind -n C-Down resize-pane -D 5
+bind -n C-Up resize-pane -U 5
+bind c new-window -c "#{pane_current_path}"
+bind-key b break-pane -d
+bind-key C-j choose-tree
+
+# Use vim keybindings in copy mode
+setw -g mode-keys vi
+
+# Setup 'v' to begin selection as in Vim
+bind-key -T copy-mode-vi v send-keys -X begin-selection
+bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'xclip -in -selection clipboard'
+
+# Smart pane switching with awareness of Vim splits.
+# See: https://github.com/christoomey/vim-tmux-navigator
+is_vim='echo "#{pane_current_command}" | grep -iqE "(^|\/)g?(view|n?vim?)(diff)?$"'
+bind -n C-h if-shell "$is_vim" "send-keys C-h" "select-pane -L"
+bind -n C-j if-shell "$is_vim" "send-keys C-j" "select-pane -D"
+bind -n C-k if-shell "$is_vim" "send-keys C-k" "select-pane -U"
+#bind -n C-l if-shell "$is_vim" "send-keys C-l" "select-pane -R"
+bind -n C-\ if-shell "$is_vim" "send-keys C-\\" "select-pane -l"
+
+# Quickly view system &amp; process info in htop
+bind-key h split-window -h "htop"
+
+# Quickly edit todo list
+bind-key t split-window -h "vim ~/todo.md"
+
+# Prompted join-pane
+bind-key j command-prompt -p "join pane from: " "join-pane -h -s '%%'"
+
+# Easily swap a pane (targeted by pane number) with the current pane
+bind-key s display-panes\; command-prompt -p "pane #: " "swap-pane -t '%%'"
+
+# Breaking Out Sessions
+bind-key C-b send-keys 'tat &amp;&amp; exit' 'C-m'
+</code></pre></div></div>
+
+<p>Neste post eu trouxe essas duas ferramentas que me ajudam bastante no meu dia a dia caso você tenha alguma configuração legal para o tmux ou vim compartilhe nos comentários.</p>
+
+<p>Grande abraço!</p>
+
+
+      
+      <div id="disqus_thread"></div>
+      <script>
+      /**
+      *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+      *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+      
+      var disqus_config = function () {
+        this.page.url = 'https://www.rtancman.com.br/soudev/vim-e-tmux-minha-configuracao.html';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://www.rtancman.com.br/soudev/vim-e-tmux-minha-configuracao.html'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      };
+
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://rtancman.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      
+      
+      <div class="clearfix">
+
+        
+        <hr />
+        <a class="btn btn-primary float-left" href="/javascript/configurar-vscode-para-javascript.html" data-toggle="tooltip" data-placement="top" title="Configurar VSCode para JavaScript">&larr; Previous<span class="d-none d-md-inline"> Post</span></a>
+        
+        
+        <a class="btn btn-primary float-right" href="/soudev/dia-a-dia-de-um-dev-remoto.html" data-toggle="tooltip" data-placement="top" title="Dia a dia de um dev remoto">Next<span class="d-none d-md-inline"> Post</span> &rarr;</a>
+        
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+    <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="https://www.twitter.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://www.facebook.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://linkedin.com/in/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; Raffael Tancman 2014 - 2022</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <div id="fb-root"></div>
+<script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+  <script src="/assets/vendor/share-bar/js/share.bar.min.js"></script>
+  <script>
+  new ShareBar({
+    'facebookAppId': '246280775508572',
+    'networks': [
+      'facebook',
+      'twitter',
+      'linkedin',
+    ],
+    buttonFullWidth: 150,
+  });
+  </script>
+
+
+  </body>
+
+</html>

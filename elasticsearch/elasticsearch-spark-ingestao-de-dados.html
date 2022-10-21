@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    Elasticsearch &amp; Spark - Raffael Tancman
+    
+  </title>
+
+  <link rel="icon" type="image/png" href="/img/favicon.png" />
+  
+    <meta property="description" content="Ingestão de dados no Elasticsearch com Spark" />
+  
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/vendor/share-bar/css/share.bar.min.css">
+  
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://www.rtancman.com.br/elasticsearch/elasticsearch-spark-ingestao-de-dados.html">
+  <link rel="alternate" type="application/rss+xml" title="Raffael Tancman" href="/feed.xml">
+  
+  <meta property="og:url" content="https://www.rtancman.com.br/elasticsearch/elasticsearch-spark-ingestao-de-dados.html" />
+  <meta property="og:type" content="website" />
+  
+    <meta property="og:title" content="Elasticsearch &amp; Spark - Raffael Tancman" />
+    
+      <meta property="og:description" content="Ingestão de dados no Elasticsearch com Spark" />
+    
+    
+      <meta property="og:image" content="https://www.rtancman.com.br/img/posts/2022/08/elasticsearch-spark-ingestao-de-dados.jpg" />
+    
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-RZN9');</script>
+  <!-- End Google Tag Manager -->
+  <!-- Facebook -->
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '246280775508572',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v3.2'
+      });
+      FB.AppEvents.logPageView();   
+    };
+  
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+  <!-- End Facebook -->
+</head>
+
+
+  <body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">Raffael Tancman</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+    <!-- Page Header -->
+
+<header class="masthead" style="background-image: url('/img/posts/2022/08/elasticsearch-spark-ingestao-de-dados.jpg')">
+
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-heading">
+          <h1>Elasticsearch & Spark</h1>
+          
+          <h2 class="subheading">Ingestão de dados no Elasticsearch com Spark</h2>
+          
+          <span class="meta">Posted by <a href="/about">Raffael Tancman</a> on August 17, 2022</span>
+          
+
+<span><i class="fa fa-clock-o fa-inverse" aria-hidden="true"></i> 9 min de leitura</span>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container container-posts">
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      <div class="share-bar" data-url="https://www.rtancman.com.br/elasticsearch/elasticsearch-spark-ingestao-de-dados.html" data-title="Elasticsearch & Spark" data-image-url="https://www.rtancman.com.br/img/posts/2022/08/elasticsearch-spark-ingestao-de-dados.jpg" data-hashtags="#rtancman" style="width: 100%"></div>
+
+      <p>Recentemente me deparei com o problema de ter que processar um arquivão (muito comum no dia a dia) e fazer algumas operações. Logo em seguida, salvar o resultado em um indice do elasticsearch. Nesses casos eu recorro sempre ao <a href="https://spark.apache.org/">Apache Spark</a> e pensei será que não existe algum cliente para colocar isso de maneira otimizada no elastic? E como sempre o google me respondeu temos sim e se chama <a href="https://github.com/elastic/elasticsearch-hadoop">elasticsearch-hadoop</a>. Olhando a <a href="https://www.elastic.co/guide/en/elasticsearch/hadoop/current/spark.html#spark-sql-write">Doc</a>, fui testar na prática e em alguns casos tive uns comportamentos inesperados, principalmente utilizando <a href="https://spark.apache.org/docs/latest/sql-programming-guide.html">Dataframes</a>.</p>
+
+<p>O Spark tem uma API muito boa para lidar com leitura e escrita de Dataframes, ou seja quero usar dessa forma! Googlando um pouquinho mais acabei encontrando na <a href="https://docs.databricks.com/data/data-sources/elasticsearch.html">documentação do Databricks</a> a forma “certa” de ser fazer. Hoje vou compartilhar com vocês este aprendizado, vamos lá!</p>
+
+<h2 id="configurando-o-ambiente-de-trabalho">Configurando o ambiente de trabalho</h2>
+
+<p>Quando trabalho no universo JVM recomendo utilizar o <a href="https://sdkman.io/">sdkman</a> para gerenciar as diversas versões de java, scala, sbt e por aê vai.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># instalando o sdkman</span>
+curl <span class="nt">-s</span> <span class="s2">"https://get.sdkman.io"</span> | bash
+
+
+<span class="c"># instalando versões da jdk, scala, sbt</span>
+sdk <span class="nb">install </span>8.0.275.hs-adpt
+sdk use java 8.0.275.hs-adpt
+
+sdk <span class="nb">install </span>scala 2.12.16
+sdk use scala 2.12.16
+
+sdk <span class="nb">install </span>sbt 1.7.1
+sdk use sbt 1.7.1
+</code></pre></div></div>
+
+<h2 id="compilando-o-projeto">Compilando o projeto</h2>
+
+<p>Com o ambiente pronto, agora vamos criar o nosso projeto, e eu recomendo utilizar o comando <a href="https://www.scala-sbt.org/1.x/docs/sbt-new-and-Templates.html">sbt new ALGUMA_TEMPLATE_QUALQUER</a>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt new scala/scala-seed.g8
+</code></pre></div></div>
+
+<p>Agora que temos a estrutura do projeto criada, vamos compilar para saber se tudo esta ok!</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt compile
+sbt run
+</code></pre></div></div>
+
+<p>Se tudo deu certo iremos visualizar o seguinte output:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>sbt run
+<span class="o">[</span>info] welcome to sbt 1.7.1 <span class="o">(</span>Oracle Corporation Java 17.0.2<span class="o">)</span>
+<span class="o">[</span>info] loading global plugins from /Users/MEU_USUARIO/.sbt/1.0/plugins
+<span class="o">[</span>info] loading project definition from /Users/MEU_USUARIO/elasticsearch-spark/project
+<span class="o">[</span>info] loading settings <span class="k">for </span>project root from build.sbt ...
+<span class="o">[</span>info] <span class="nb">set </span>current project to lala <span class="o">(</span><span class="k">in </span>build file:/Users/MEU_USUARIO/elasticsearch-spark/<span class="o">)</span>
+<span class="o">[</span>info] running example.Hello
+hello
+</code></pre></div></div>
+
+<h2 id="criando-o-nosso-pacote-método-main-e-adicionando-as-dependências">Criando o nosso pacote, método main e adicionando as dependências</h2>
+
+<p>Agora vamos criar os nossos exemplos em scala.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir </span>project
+<span class="nb">mkdir</span> <span class="nt">-p</span> src/main/scala/br/com/rtancman/
+<span class="nb">touch </span>src/main/scala/br/com/rtancman/ElasticsearchSpark.scala
+<span class="nb">touch </span>project/plugins.sbt
+<span class="nb">touch </span>docker-compose.yml
+</code></pre></div></div>
+
+<p>Edite o arquivo <code class="language-plaintext highlighter-rouge">src/main/scala/br/com/rtancman/ElasticsearchSpark.scala</code> com o conteudo abaixo:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="nn">br.com.rtancman</span>
+
+<span class="k">import</span> <span class="nn">org.apache.spark.sql.</span><span class="o">{</span><span class="nc">SparkSession</span><span class="o">,</span> <span class="nc">Row</span><span class="o">}</span>
+<span class="k">import</span> <span class="nn">org.apache.spark.sql.types.</span><span class="o">{</span><span class="nc">StringType</span><span class="o">,</span> <span class="nc">StructField</span><span class="o">,</span> <span class="nc">StructType</span><span class="o">}</span>
+<span class="k">import</span> <span class="nn">org.apache.spark.sql.functions._</span>
+<span class="k">import</span> <span class="nn">scala.collection.JavaConversions._</span>
+
+<span class="k">object</span> <span class="nc">ElasticsearchSpark</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="nf">main</span><span class="o">(</span><span class="n">args</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="o">{</span>
+    <span class="k">val</span> <span class="nv">spark</span> <span class="k">=</span> <span class="nc">SparkSession</span>
+      <span class="o">.</span><span class="py">builder</span><span class="o">()</span>
+      <span class="o">.</span><span class="py">appName</span><span class="o">(</span><span class="s">"elasticsearch-spark-example-1"</span><span class="o">)</span>
+      <span class="o">.</span><span class="py">master</span><span class="o">(</span><span class="s">"local[*]"</span><span class="o">)</span>
+      <span class="o">.</span><span class="py">config</span><span class="o">(</span><span class="s">"es.nodes"</span><span class="o">,</span> <span class="s">"localhost"</span><span class="o">)</span>
+      <span class="o">.</span><span class="py">config</span><span class="o">(</span><span class="s">"es.port"</span><span class="o">,</span> <span class="s">"9200"</span><span class="o">)</span>
+      <span class="o">.</span><span class="py">getOrCreate</span><span class="o">()</span>
+
+    <span class="k">import</span> <span class="nn">spark.implicits._</span>
+
+    <span class="k">val</span> <span class="nv">schemaMovie</span> <span class="k">=</span> <span class="nc">StructType</span><span class="o">(</span>
+      <span class="nc">Array</span><span class="o">(</span>
+        <span class="nc">StructField</span><span class="o">(</span><span class="s">"title"</span><span class="o">,</span> <span class="nc">StringType</span><span class="o">,</span><span class="kc">true</span><span class="o">),</span>
+        <span class="nc">StructField</span><span class="o">(</span><span class="s">"type"</span><span class="o">,</span> <span class="nc">StringType</span><span class="o">,</span><span class="kc">true</span><span class="o">)</span>
+      <span class="o">)</span>
+    <span class="o">)</span>
+    <span class="k">val</span> <span class="nv">rowMovie</span><span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span><span class="nc">Row</span><span class="o">(</span><span class="s">"Matrix"</span><span class="o">,</span> <span class="s">"movie"</span><span class="o">),</span> <span class="nc">Row</span><span class="o">(</span><span class="s">"John Wick"</span><span class="o">,</span> <span class="s">"movie"</span><span class="o">))</span>
+
+    <span class="k">val</span> <span class="nv">df</span> <span class="k">=</span> <span class="nv">spark</span><span class="o">.</span><span class="py">createDataFrame</span><span class="o">(</span><span class="n">rowMovie</span><span class="o">,</span> <span class="n">schemaMovie</span><span class="o">)</span>
+
+    <span class="nv">df</span><span class="o">.</span><span class="py">write</span>
+      <span class="o">.</span><span class="py">format</span><span class="o">(</span><span class="s">"org.elasticsearch.spark.sql"</span><span class="o">)</span>
+      <span class="o">.</span><span class="py">option</span><span class="o">(</span><span class="s">"es.resource"</span><span class="o">,</span> <span class="s">"elasticsearch-spark-small-movies"</span><span class="o">)</span>
+      <span class="o">.</span><span class="py">option</span><span class="o">(</span><span class="s">"es.write.operation"</span><span class="o">,</span> <span class="s">"upsert"</span><span class="o">)</span>
+      <span class="o">.</span><span class="py">option</span><span class="o">(</span><span class="s">"es.index.auto.create"</span><span class="o">,</span> <span class="s">"true"</span><span class="o">)</span>
+      <span class="o">.</span><span class="py">option</span><span class="o">(</span><span class="s">"es.nodes.wan.only"</span><span class="o">,</span> <span class="s">"true"</span><span class="o">)</span>
+      <span class="o">.</span><span class="py">option</span><span class="o">(</span><span class="s">"es.mapping.id"</span><span class="o">,</span> <span class="s">"id"</span><span class="o">)</span>
+      <span class="o">.</span><span class="py">option</span><span class="o">(</span><span class="s">"es.spark.dataframe.write.null"</span><span class="o">,</span> <span class="s">"true"</span><span class="o">)</span>
+      <span class="o">.</span><span class="py">save</span><span class="o">()</span>
+
+    <span class="nv">spark</span><span class="o">.</span><span class="py">close</span><span class="o">()</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Vamos incluir as dependências. Para isto vamos precisar editar 3 arquivos <code class="language-plaintext highlighter-rouge">project/Dependencies.scala</code>, <code class="language-plaintext highlighter-rouge">build.sbt</code> e <code class="language-plaintext highlighter-rouge">project/plugins.sbt</code> com o conteúdo abaixo:</p>
+
+<p>Arquivo <code class="language-plaintext highlighter-rouge">project/Dependencies.scala</code>:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">sbt._</span>
+
+<span class="k">object</span> <span class="nc">Dependencies</span> <span class="o">{</span>
+  <span class="k">lazy</span> <span class="k">val</span> <span class="nv">scalaTest</span> <span class="k">=</span> <span class="s">"org.scalatest"</span> <span class="o">%%</span> <span class="s">"scalatest"</span> <span class="o">%</span> <span class="s">"3.2.11"</span>
+  <span class="k">lazy</span> <span class="k">val</span> <span class="nv">spark</span> <span class="k">=</span> <span class="s">"org.apache.spark"</span> <span class="o">%%</span> <span class="s">"spark-core"</span> <span class="o">%</span> <span class="s">"3.2.2"</span>
+  <span class="k">lazy</span> <span class="k">val</span> <span class="nv">sparkSql</span> <span class="k">=</span> <span class="s">"org.apache.spark"</span> <span class="o">%%</span> <span class="s">"spark-sql"</span> <span class="o">%</span> <span class="s">"3.2.2"</span>
+  <span class="k">lazy</span> <span class="k">val</span> <span class="nv">elasticSpark</span> <span class="k">=</span>
+    <span class="s">"org.elasticsearch"</span> <span class="o">%</span> <span class="s">"elasticsearch-spark-30_2.12"</span> <span class="o">%</span> <span class="s">"8.3.3"</span>
+<span class="o">}</span>
+
+<span class="k">object</span> <span class="nc">ExcludeDependencies</span> <span class="o">{</span>
+  <span class="k">lazy</span> <span class="k">val</span> <span class="nv">sparkCore2_11</span> <span class="k">=</span> <span class="s">"org.apache.spark"</span> <span class="o">%</span> <span class="s">"spark-core_2.11"</span>
+  <span class="k">lazy</span> <span class="k">val</span> <span class="nv">sparkSQL2_11</span> <span class="k">=</span> <span class="s">"org.apache.spark"</span> <span class="o">%</span> <span class="s">"spark-sql_2.11"</span>
+  <span class="k">lazy</span> <span class="k">val</span> <span class="nv">sparkYarn2_11</span> <span class="k">=</span> <span class="s">"org.apache.spark"</span> <span class="o">%</span> <span class="s">"spark-yarn_2.11"</span>
+  <span class="k">lazy</span> <span class="k">val</span> <span class="nv">sparkStreaming2_11</span> <span class="k">=</span> <span class="s">"org.apache.spark"</span> <span class="o">%</span> <span class="s">"spark-streaming_2.11"</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Arquivo <code class="language-plaintext highlighter-rouge">build.sbt</code>:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">Dependencies._</span>
+<span class="k">import</span> <span class="nn">ExcludeDependencies._</span>
+
+<span class="nc">ThisBuild</span> <span class="o">/</span> <span class="n">scalaVersion</span> <span class="o">:=</span> <span class="s">"2.12.16"</span>
+<span class="nc">ThisBuild</span> <span class="o">/</span> <span class="n">version</span> <span class="o">:=</span> <span class="s">"1.0.0"</span>
+<span class="nc">ThisBuild</span> <span class="o">/</span> <span class="n">organization</span> <span class="o">:=</span> <span class="s">"br.com.rtancman"</span>
+<span class="nc">ThisBuild</span> <span class="o">/</span> <span class="n">organizationName</span> <span class="o">:=</span> <span class="s">"rtancman"</span>
+<span class="nc">ThisBuild</span> <span class="o">/</span> <span class="n">assembly</span> <span class="o">/</span> <span class="n">assemblyMergeStrategy</span> <span class="o">:=</span> <span class="o">{</span>
+  <span class="k">case</span> <span class="nc">PathList</span><span class="o">(</span><span class="s">"META-INF"</span><span class="o">,</span> <span class="k">_</span><span class="o">*)</span> <span class="k">=&gt;</span> <span class="nv">MergeStrategy</span><span class="o">.</span><span class="py">discard</span>
+  <span class="k">case</span> <span class="s">"application.conf"</span>       <span class="k">=&gt;</span> <span class="nv">MergeStrategy</span><span class="o">.</span><span class="py">concat</span>
+  <span class="k">case</span> <span class="s">"reference.conf"</span>         <span class="k">=&gt;</span> <span class="nv">MergeStrategy</span><span class="o">.</span><span class="py">concat</span>
+  <span class="k">case</span> <span class="k">_</span>                        <span class="k">=&gt;</span> <span class="nv">MergeStrategy</span><span class="o">.</span><span class="py">first</span>
+<span class="o">}</span>
+
+<span class="k">lazy</span> <span class="k">val</span> <span class="nv">root</span> <span class="k">=</span> <span class="o">(</span><span class="n">project</span> <span class="n">in</span> <span class="nf">file</span><span class="o">(</span><span class="s">"."</span><span class="o">))</span>
+  <span class="o">.</span><span class="py">settings</span><span class="o">(</span>
+    <span class="n">name</span> <span class="o">:=</span> <span class="s">"rtancman-elastic-spark-examples"</span><span class="o">,</span>
+    <span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
+      <span class="n">scalaTest</span> <span class="o">%</span> <span class="nc">Test</span><span class="o">,</span>
+      <span class="n">elasticSpark</span><span class="o">,</span>
+      <span class="n">spark</span><span class="o">,</span>
+      <span class="n">sparkSql</span>
+    <span class="o">),</span>
+    <span class="n">excludeDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
+      <span class="n">sparkCore2_11</span><span class="o">,</span>
+      <span class="n">sparkSQL2_11</span><span class="o">,</span>
+      <span class="n">sparkYarn2_11</span><span class="o">,</span>
+      <span class="n">sparkStreaming2_11</span>
+    <span class="o">)</span>
+  <span class="o">)</span>
+</code></pre></div></div>
+
+<p>Arquivo <code class="language-plaintext highlighter-rouge">project/plugins.sbt</code>:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">addSbtPlugin</span><span class="o">(</span><span class="s">"com.eed3si9n"</span> <span class="o">%</span> <span class="s">"sbt-assembly"</span> <span class="o">%</span> <span class="s">"1.2.0"</span><span class="o">)</span>
+</code></pre></div></div>
+
+<p>Vamos testar se tudo esta ok rodando <code class="language-plaintext highlighter-rouge">sbt compile</code>. Devemos ter o seguinte resultado:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>success] Total <span class="nb">time</span>: 4 s, completed Aug 17, 2022, 4:44:51 PM
+</code></pre></div></div>
+
+<h2 id="instalando-o-spark-e-elasticsearch">Instalando o spark e elasticsearch</h2>
+
+<p>Para executar este programa precisamos de um cluster spark e do elasticsearch. Começando com o setup do spark:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget https://archive.apache.org/dist/spark/spark-3.2.2/spark-3.2.2-bin-hadoop2.7.tgz
+<span class="nb">tar </span>x spark-3.2.2-bin-hadoop2.7.tgz
+<span class="nb">export </span><span class="nv">SPARK_HOME</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>/spark-3.2.2-bin-hadoop2.7
+<span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$SPARK_HOME</span>:<span class="nv">$SPARK_HOME</span>/bin:<span class="nv">$SPARK_HOME</span>/sbin
+<span class="c"># test</span>
+spark-shell
+</code></pre></div></div>
+
+<p>Para o elasticsearch, vamos subir com o docker-compose. Edite o arquivo <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> com o conteúdo abaixo:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>version: <span class="s1">'3'</span>
+services:
+  elasticsearch:
+    image: us.gcr.io/jusbrasil-155317/jusbrasil/scooby-tenx-elastic-iteration-test-base:8.3.3
+    container_name: elasticsearch_spark
+    ports:
+      - <span class="s2">"9200:9200"</span>
+      - <span class="s2">"9300:9300"</span>
+    environment:
+      - discovery.type<span class="o">=</span>single-node
+      - xpack.security.enabled<span class="o">=</span><span class="nb">false</span>
+      - <span class="s2">"ES_JAVA_OPTS=-Xms512m -Xmx512m"</span>
+    networks:
+      - elasticsearch_spark
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.3.3
+    ports:
+      - <span class="s2">"5601:5601"</span>
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch_spark:9200
+      ELASTICSEARCH_HOSTS: http://elasticsearch_spark:9200
+    networks:
+      - elasticsearch_spark
+
+volumes:
+  es_data:
+    driver: <span class="nb">local
+
+</span>networks:
+  elasticsearch_spark:
+    driver: bridge
+</code></pre></div></div>
+
+<h2 id="executando-o-programa">Executando o programa</h2>
+
+<p>Para rodar este spark job, vamos subir o elastic, compilar o nosso projeto gerando um .jar e rodar o comando spark-submit.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose up <span class="nt">-d</span>
+
+sbt assembly
+
+spark-submit <span class="se">\</span>
+  <span class="nt">--class</span> br.com.rtancman.ElasticsearchSpark <span class="se">\</span>
+  target/scala-2.12/rtancman-elastic-spark-examples-assembly-1.0.0.jar
+</code></pre></div></div>
+
+<h2 id="verificando-no-kibana-os-valores-indexados">Verificando no kibana os valores indexados</h2>
+
+<p>Nosso docker-compose tem uma imagem do kibana e podemos acessar a url <a href="http://localhost:5601/app/dev_tools">http://localhost:5601/app/dev_tools</a> para realizar queries no elasticsearch.</p>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">GET /_cat/indices
+
+GET /elasticsearch-spark-small-movies/_search
+</span></code></pre></div></div>
+
+<p>Se tudo correu conforme o esperado o seu resultado deve ser:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"took"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"timed_out"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"_shards"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"successful"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"skipped"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"failed"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"hits"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"total"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"relation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eq"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"max_score"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"hits"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"_index"</span><span class="p">:</span><span class="w"> </span><span class="s2">"elasticsearch-spark-small-movies"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"_score"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"_source"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Wick"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"movie"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"_index"</span><span class="p">:</span><span class="w"> </span><span class="s2">"elasticsearch-spark-small-movies"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"_score"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"_source"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Matrix"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"movie"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="conclusão">Conclusão</h2>
+
+<p>Spark e Elasticsearch são duas ferramentas poderosas e neste artigo busquei detalhar como podemos trabalhar com elas em conjunto para gerar valor no nosso dia a dia.</p>
+
+<p>Referências:</p>
+<ul>
+  <li><a href="https://docs.databricks.com/data/data-sources/elasticsearch.html">ElasticSearch - Data ingestion Doc by Databrics</a></li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/hadoop/current/spark.html">Elastic - Apache Spark Support</a></li>
+  <li><a href="https://docs.databricks.com/data/data-sources/elasticsearch.html">Writing a Spark Dataframe to an Elasticsearch Index</a></li>
+</ul>
+
+
+      
+      <div id="disqus_thread"></div>
+      <script>
+      /**
+      *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+      *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+      
+      var disqus_config = function () {
+        this.page.url = 'https://www.rtancman.com.br/elasticsearch/elasticsearch-spark-ingestao-de-dados.html';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://www.rtancman.com.br/elasticsearch/elasticsearch-spark-ingestao-de-dados.html'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      };
+
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://rtancman.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      
+      
+      <div class="clearfix">
+
+        
+        <hr />
+        <a class="btn btn-primary float-left" href="/kubernetes/kubernetes-para-iniciantes-parte-2.html" data-toggle="tooltip" data-placement="top" title="Kubernetes para iniciantes - Parte 2">&larr; Previous<span class="d-none d-md-inline"> Post</span></a>
+        
+        
+        <a class="btn btn-primary float-right" href="/elasticsearch/elasticsearch-debug-remoto.html" data-toggle="tooltip" data-placement="top" title="Elasticsearch Debug Remoto">Next<span class="d-none d-md-inline"> Post</span> &rarr;</a>
+        
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+    <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="https://www.twitter.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://www.facebook.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://linkedin.com/in/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; Raffael Tancman 2014 - 2022</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <div id="fb-root"></div>
+<script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+  <script src="/assets/vendor/share-bar/js/share.bar.min.js"></script>
+  <script>
+  new ShareBar({
+    'facebookAppId': '246280775508572',
+    'networks': [
+      'facebook',
+      'twitter',
+      'linkedin',
+    ],
+    buttonFullWidth: 150,
+  });
+  </script>
+
+
+  </body>
+
+</html>

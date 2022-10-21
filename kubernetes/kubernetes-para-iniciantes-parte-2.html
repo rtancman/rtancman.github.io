@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    Kubernetes para iniciantes - Parte 2 - Raffael Tancman
+    
+  </title>
+
+  <link rel="icon" type="image/png" href="/img/favicon.png" />
+  
+    <meta property="description" content="Aplicando Secrets, Configmap e Volumes no k8s." />
+  
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/vendor/share-bar/css/share.bar.min.css">
+  
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://www.rtancman.com.br/kubernetes/kubernetes-para-iniciantes-parte-2.html">
+  <link rel="alternate" type="application/rss+xml" title="Raffael Tancman" href="/feed.xml">
+  
+  <meta property="og:url" content="https://www.rtancman.com.br/kubernetes/kubernetes-para-iniciantes-parte-2.html" />
+  <meta property="og:type" content="website" />
+  
+    <meta property="og:title" content="Kubernetes para iniciantes - Parte 2 - Raffael Tancman" />
+    
+      <meta property="og:description" content="Aplicando Secrets, Configmap e Volumes no k8s." />
+    
+    
+      <meta property="og:image" content="https://www.rtancman.com.br/img/posts/2020/06/kubernetes-para-iniciantes.jpg" />
+    
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-RZN9');</script>
+  <!-- End Google Tag Manager -->
+  <!-- Facebook -->
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '246280775508572',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v3.2'
+      });
+      FB.AppEvents.logPageView();   
+    };
+  
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+  <!-- End Facebook -->
+</head>
+
+
+  <body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">Raffael Tancman</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+    <!-- Page Header -->
+
+<header class="masthead" style="background-image: url('/img/posts/2020/06/kubernetes-para-iniciantes.jpg')">
+
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-heading">
+          <h1>Kubernetes para iniciantes - Parte 2</h1>
+          
+          <h2 class="subheading">Aplicando Secrets, Configmap e Volumes no k8s.</h2>
+          
+          <span class="meta">Posted by <a href="/about">Raffael Tancman</a> on July 25, 2020</span>
+          
+
+<span><i class="fa fa-clock-o fa-inverse" aria-hidden="true"></i> 12 min de leitura</span>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container container-posts">
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      <div class="share-bar" data-url="https://www.rtancman.com.br/kubernetes/kubernetes-para-iniciantes-parte-2.html" data-title="Kubernetes para iniciantes - Parte 2" data-image-url="https://www.rtancman.com.br/img/posts/2020/06/kubernetes-para-iniciantes.jpg" data-hashtags="#rtancman" style="width: 100%"></div>
+
+      <p>Este artigo é a continuação do nosso wordpress rodando no k8s. Caso você não tenha acessado a primeira parte, <a href="https://www.rtancman.com.br/kubernetes/kubernetes-para-iniciantes.html">clique aqui</a> para entender o que é k8s, quais são seus principais comandos e como subir um wordpress.</p>
+
+<p>Neste artigo vamos evoluir o nosso projeto do wordpress aplicando Secrets, Configmap e Volumes. Vamos iniciar alterando o nosso Deployment para utilizar o Configmap e Secrets.</p>
+
+<h3 id="configmap-e-secrets-na-prática">Configmap e Secrets na prática</h3>
+
+<p>No nosso manifesto atual estamos incluindo as variáveis de ambiente todas no manifesto. Isso não é errado, mas quando se trata de configurações que podem ser compartilhadas entre outros pods o ideal é a gente centralizar essas informações em um manifesto em si. O Configmap vai nos ajudar nesse sentido. Vamos criar o nosso e aplicar essa alteração no Deployment.</p>
+
+<p>Crie o arquivo wp-configmap.yaml com o seguinte conteúdo abaixo:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ConfigMap</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-configmap</span>
+<span class="na">data</span><span class="pi">:</span>
+  <span class="na">WORDPRESS_DB_HOST</span><span class="pi">:</span> <span class="s2">"</span><span class="s">mariadb-service"</span>
+  <span class="na">WORDPRESS_DB_PORT</span><span class="pi">:</span> <span class="s2">"</span><span class="s">3306"</span>
+  <span class="na">WORDPRESS_DB_NAME</span><span class="pi">:</span> <span class="s2">"</span><span class="s">wp-k8s"</span>
+</code></pre></div></div>
+
+<p>Agora podemos rodar o apply e verificar se tudo esta funcionando.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> wp-configmap.yaml
+kubectl get configmap
+
+<span class="c"># resultado</span>
+NAME DATA AGE
+meu-blog-escalavel-configmap 2 11m
+
+<span class="c"># rodando o describe</span>
+kubectl describe configmap meu-blog-escalavel-configmap
+</code></pre></div></div>
+
+<p>Vamos aplicar essas variáveis no nosso deployment e para isso existem diversas formas de aplicar essa configuração e recomendo a leitura da <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#use-configmap-defined-environment-variables-in-pod-commands">documentação aqui</a>. Altere o arquivo wp-deployment.yaml com o seguinte conteúdo abaixo:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">wordpress-escalavel</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">3</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">wordpress-escalavel</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">wordpress-escalavel</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">wordpress</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">wordpress:5.4.2-php7.2-apache</span>
+        <span class="na">env</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_USER</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">wp-user</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_PASSWORD</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">q1w2e3r4</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_HOST</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">configMapKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-configmap</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_HOST</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_PORT</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">configMapKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-configmap</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_PORT</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_NAME</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">configMapKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-configmap</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_NAME</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">80</span>
+</code></pre></div></div>
+
+<p>Iremos agora alterar o Deployment do nosso banco mariaDB. Altere o arquivo wp-mariadb.yaml com o seguinte conteúdo abaixo:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+  <span class="na">strategy</span><span class="pi">:</span>
+    <span class="na">type</span><span class="pi">:</span> <span class="s">Recreate</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">rtancman/mariadb-local</span>
+        <span class="na">imagePullPolicy</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Always"</span>
+        <span class="na">env</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_ROOT_PASSWORD</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">adminroot</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_USER</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">wp-user</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_PASSWORD</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">q1w2e3r4</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_DATABASE</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">configMapKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-configmap</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_NAME</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">3306</span>
+          <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+</code></pre></div></div>
+
+<p>Agora basta aplicar as alterações. Vamos lá!</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> wp-deployment.yaml
+kubectl apply <span class="nt">-f</span> wp-mariadb.yaml
+</code></pre></div></div>
+
+<p>Pronto! Agora toda vez que alterar o valor do ConfigMap essas variáveis vão ser aplicadas nos nossos deployments. Ainda precisamos acertar as credenciais de acesso e para isso vamos utilizar o <a href="https://kubernetes.io/docs/concepts/configuration/secret/">Secret</a>.</p>
+
+<p>Antes de criar o arquivo vamos precisar colocar os valores de login e senha do banco em base64 encode.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="nt">-n</span>  <span class="s2">"adminroot"</span> | <span class="nb">base64</span>
+<span class="c">#resultado</span>
+YWRtaW5yb290
+
+<span class="nb">echo</span> <span class="nt">-n</span>  <span class="s2">"wp-user"</span> | <span class="nb">base64</span>
+<span class="c">#resultado</span>
+<span class="nv">d3AtdXNlcg</span><span class="o">==</span>
+
+<span class="nb">echo</span> <span class="nt">-n</span>  <span class="s2">"q1w2e3r4"</span> | <span class="nb">base64</span>
+<span class="c">#resultado</span>
+<span class="nv">cTF3MmUzcjQ</span><span class="o">=</span>
+</code></pre></div></div>
+
+<p>Agora é criar o nosso manifesto e para isso vamos criar o arquivo wp-secrets.yaml com o seguinte conteúdo abaixo:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Secret</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-secrets</span>
+<span class="na">type</span><span class="pi">:</span> <span class="s">Opaque</span>
+<span class="na">data</span><span class="pi">:</span>
+  <span class="na">mariadb_username</span><span class="pi">:</span> <span class="s">d3AtdXNlcg==</span>
+  <span class="na">mariadb_password</span><span class="pi">:</span> <span class="s">cTF3MmUzcjQ=</span>
+  <span class="na">mariadb_root_password</span><span class="pi">:</span> <span class="s">YWRtaW5yb290</span>
+</code></pre></div></div>
+
+<p>Vamos aplicar e verificar as configurações.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> wp-secrets.yaml
+kubectl get secrets meu-blog-escalavel-secrets
+<span class="c">#resultado</span>
+NAME TYPE DATA AGE
+meu-blog-escalavel-secrets Opaque 3 9s
+
+kubectl describe secrets meu-blog-escalavel-secrets
+</code></pre></div></div>
+
+<p>Após subir essa configuração, vamos aplicar os secrets em nossos deployments. Altere o arquivo wp-deployment.yaml com o seguinte conteúdo abaixo:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">wordpress-escalavel</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">3</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">wordpress-escalavel</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">wordpress-escalavel</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">wordpress</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">wordpress:5.4.2-php7.2-apache</span>
+        <span class="na">env</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_USER</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-secrets</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">mariadb_username</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_PASSWORD</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-secrets</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">mariadb_password</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_HOST</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">configMapKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-configmap</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_HOST</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_PORT</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">configMapKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-configmap</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_PORT</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_NAME</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">configMapKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-configmap</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_NAME</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">80</span>
+</code></pre></div></div>
+
+<p>E precisamos alterar o arquivo wp-mariadb.yaml com o seguinte conteúdo abaixo:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+  <span class="na">strategy</span><span class="pi">:</span>
+    <span class="na">type</span><span class="pi">:</span> <span class="s">Recreate</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">rtancman/mariadb-local</span>
+        <span class="na">imagePullPolicy</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Always"</span>
+        <span class="na">env</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_USER</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-secrets</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">mariadb_username</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_PASSWORD</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-secrets</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">mariadb_password</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_ROOT_PASSWORD</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-secrets</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">mariadb_root_password</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_DATABASE</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">configMapKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-configmap</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_NAME</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">3306</span>
+          <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+</code></pre></div></div>
+
+<p>Com os manifestos alterados vamos aplicar essa nova configuração.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> wp-deployment.yaml
+kubectl apply <span class="nt">-f</span> wp-mariadb.yaml
+</code></pre></div></div>
+
+<p>Pronto! Nossos deployments agora estão configurados utilizando ConfigMap e Secrets. Com isso aplicamos boas práticas em nosso manifesto. Agora vamos aplicar o PersistentVolume e fazer com que a nossa base do mariaDB não seja destruida a cada restart dos pods.</p>
+
+<h2 id="persistent-volume">Persistent Volume</h2>
+
+<p>Diferentemente dos outros deployments, como este é um banco de dados e não queremos perder as suas informações a cada restart do pod, vamos criar um volume. E para isso vamos alterar o nosso manifesto para incluir a configuração de volumes. Aqui utilizamos o tipo <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistent-volumes">PersistentVolume</a> e <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims">PersistentVolumeClaim</a>.</p>
+
+<p>Crie o arquivo wp-mariadb-pv.yaml com o seguinte conteúdo abaixo:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">PersistentVolume</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-pv-volume</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">type</span><span class="pi">:</span> <span class="s">local</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">capacity</span><span class="pi">:</span>
+    <span class="na">storage</span><span class="pi">:</span> <span class="s">20Gi</span>
+  <span class="na">accessModes</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">ReadWriteOnce</span>
+  <span class="na">hostPath</span><span class="pi">:</span>
+    <span class="na">path</span><span class="pi">:</span> <span class="s2">"</span><span class="s">/mnt/data"</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">PersistentVolumeClaim</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-pv-claim</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">accessModes</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">ReadWriteOnce</span>
+  <span class="na">resources</span><span class="pi">:</span>
+    <span class="na">requests</span><span class="pi">:</span>
+      <span class="na">storage</span><span class="pi">:</span> <span class="s">20Gi</span>
+</code></pre></div></div>
+
+<p>Neste aquivo acima estamos criando 2 objetos no k8s que são PersistentVolume e o PersistentVolumeClaim. O k8s permite essa formatação incluindo o delimitador — defindo onde termina o manifesto. Agora vamos aplicar o nosso volume no Deployment do mariadb.</p>
+
+<p>Alterar o arquivo wp-mariadb.yaml com o seguinte conteúdo abaixo:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+  <span class="na">strategy</span><span class="pi">:</span>
+    <span class="na">type</span><span class="pi">:</span> <span class="s">Recreate</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">rtancman/mariadb-local</span>
+        <span class="na">imagePullPolicy</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Always"</span>
+        <span class="na">env</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_USER</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-secrets</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">mariadb_username</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_PASSWORD</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-secrets</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">mariadb_password</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_ROOT_PASSWORD</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-secrets</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">mariadb_root_password</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_DATABASE</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">configMapKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-configmap</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_NAME</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">3306</span>
+          <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+        <span class="na">volumeMounts</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-persistent-storage</span>
+          <span class="na">mountPath</span><span class="pi">:</span> <span class="s">/var/lib/mysql</span>
+      <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-persistent-storage</span>
+        <span class="na">persistentVolumeClaim</span><span class="pi">:</span>
+          <span class="na">claimName</span><span class="pi">:</span> <span class="s">mariadb-pv-claim</span>
+</code></pre></div></div>
+
+<p>Com isso, vamos executar os comandos de apply.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> wp-mariadb-pv.yaml
+kubectl apply <span class="nt">-f</span> wp-mariadb.yaml
+
+<span class="c"># verificando os nossos volumes</span>
+kubectl get pvc mariadb-pv-claim
+kubectl get pv mariadb-pv-volume
+</code></pre></div></div>
+
+<p>Pronto! Com isso agora podemos restart o nosso deployment sem problemas que a nossa base de dados não vai ser mais removida devido ao volume que criamos. Ainda sim podemos melhor esse manifesto do mariadb. Nesses casos que precisamos de um volume para manter a consistência dos nossos deployments o ideal é utilizar o objeto <a href="https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/">StatefulSets</a>. Vamos as alterações em nosso manifesto.</p>
+
+<p>Vamos criar um novo arquivo wp-mariadb-statefullsets.yaml com o seguinte conteúdo abaixo:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">StatefulSet</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+  <span class="na">serviceName</span><span class="pi">:</span> <span class="s">mariadb-service</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">rtancman/mariadb-local</span>
+        <span class="na">imagePullPolicy</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Always"</span>
+        <span class="na">env</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_USER</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-secrets</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">mariadb_username</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_PASSWORD</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-secrets</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">mariadb_password</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_ROOT_PASSWORD</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-secrets</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">mariadb_root_password</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_DATABASE</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">configMapKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-configmap</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_NAME</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">3306</span>
+          <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+        <span class="na">volumeMounts</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-persistent-storage</span>
+          <span class="na">mountPath</span><span class="pi">:</span> <span class="s">/var/lib/mysql</span>
+  <span class="na">volumeClaimTemplates</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">metadata</span><span class="pi">:</span>
+        <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-persistent-storage</span>
+      <span class="na">spec</span><span class="pi">:</span>
+        <span class="na">accessModes</span><span class="pi">:</span> <span class="pi">[</span> <span class="s2">"</span><span class="s">ReadWriteOnce"</span> <span class="pi">]</span>
+        <span class="na">resources</span><span class="pi">:</span>
+          <span class="na">requests</span><span class="pi">:</span>
+            <span class="na">storage</span><span class="pi">:</span> <span class="s">20Gi</span>
+</code></pre></div></div>
+
+<p>Com essa configuração volumeClaimTemplates toda vez que você subir um novo statefullset ou der um scale nesse objeto, o k8s vai criar um novo volume seguindo a especificação do manifesto. Agora vamos executar os comandos.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># vamos apagar as configurações passadas</span>
+kubectl delete deployments mariadb-wp
+kubectl delete pvc mariadb-pv-claim
+kubectl delete pv mariadb-pv-volume
+
+kubectl apply <span class="nt">-f</span> wp-mariadb-statefullsets.yaml
+<span class="c"># verificando os nossos volumes</span>
+kubectl get pvc mariadb-pv-claim
+kubectl get pv mariadb-pv-volume
+</code></pre></div></div>
+
+<p>Pronto agora temos o nosso mariadb como statefullset! Mais uma vez parabéns se você chegou até aqui e podemos dizer que o básico sobre Secrets, ConfigMap e Volumes no k8s você acabou de aprender. Leia a documentação e faça os tutoriais no site do k8s para continuar praticando. Todo este código esta no github no repositorio <a href="https://github.com/rtancman/k8s-examples">rtancman/k8s-examples</a>.</p>
+
+<p>Grande abraço!</p>
+
+
+      
+      <div id="disqus_thread"></div>
+      <script>
+      /**
+      *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+      *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+      
+      var disqus_config = function () {
+        this.page.url = 'https://www.rtancman.com.br/kubernetes/kubernetes-para-iniciantes-parte-2.html';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://www.rtancman.com.br/kubernetes/kubernetes-para-iniciantes-parte-2.html'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      };
+
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://rtancman.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      
+      
+      <div class="clearfix">
+
+        
+        <hr />
+        <a class="btn btn-primary float-left" href="/elasticsearch/elasticsearch-como-ferramenta-de-busca.html" data-toggle="tooltip" data-placement="top" title="Elasticsearch como ferramenta de busca">&larr; Previous<span class="d-none d-md-inline"> Post</span></a>
+        
+        
+        <a class="btn btn-primary float-right" href="/elasticsearch/elasticsearch-spark-ingestao-de-dados.html" data-toggle="tooltip" data-placement="top" title="Elasticsearch & Spark">Next<span class="d-none d-md-inline"> Post</span> &rarr;</a>
+        
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+    <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="https://www.twitter.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://www.facebook.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://linkedin.com/in/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; Raffael Tancman 2014 - 2022</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <div id="fb-root"></div>
+<script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+  <script src="/assets/vendor/share-bar/js/share.bar.min.js"></script>
+  <script>
+  new ShareBar({
+    'facebookAppId': '246280775508572',
+    'networks': [
+      'facebook',
+      'twitter',
+      'linkedin',
+    ],
+    buttonFullWidth: 150,
+  });
+  </script>
+
+
+  </body>
+
+</html>

@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    Elasticsearch como ferramenta de busca - Raffael Tancman
+    
+  </title>
+
+  <link rel="icon" type="image/png" href="/img/favicon.png" />
+  
+    <meta property="description" content="Entendendo como e porque utilizar o elasticsearch em um sistema de busca." />
+  
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/vendor/share-bar/css/share.bar.min.css">
+  
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://www.rtancman.com.br/elasticsearch/elasticsearch-como-ferramenta-de-busca.html">
+  <link rel="alternate" type="application/rss+xml" title="Raffael Tancman" href="/feed.xml">
+  
+  <meta property="og:url" content="https://www.rtancman.com.br/elasticsearch/elasticsearch-como-ferramenta-de-busca.html" />
+  <meta property="og:type" content="website" />
+  
+    <meta property="og:title" content="Elasticsearch como ferramenta de busca - Raffael Tancman" />
+    
+      <meta property="og:description" content="Entendendo como e porque utilizar o elasticsearch em um sistema de busca." />
+    
+    
+      <meta property="og:image" content="https://www.rtancman.com.br/img/posts/2020/06/elasticsearch-como-ferramenta-de-busca.jpg" />
+    
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-RZN9');</script>
+  <!-- End Google Tag Manager -->
+  <!-- Facebook -->
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '246280775508572',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v3.2'
+      });
+      FB.AppEvents.logPageView();   
+    };
+  
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+  <!-- End Facebook -->
+</head>
+
+
+  <body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">Raffael Tancman</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+    <!-- Page Header -->
+
+<header class="masthead" style="background-image: url('/img/posts/2020/06/elasticsearch-como-ferramenta-de-busca.jpg')">
+
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-heading">
+          <h1>Elasticsearch como ferramenta de busca</h1>
+          
+          <h2 class="subheading">Entendendo como e porque utilizar o elasticsearch em um sistema de busca.</h2>
+          
+          <span class="meta">Posted by <a href="/about">Raffael Tancman</a> on June 30, 2020</span>
+          
+
+<span><i class="fa fa-clock-o fa-inverse" aria-hidden="true"></i> 14 min de leitura</span>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container container-posts">
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      <div class="share-bar" data-url="https://www.rtancman.com.br/elasticsearch/elasticsearch-como-ferramenta-de-busca.html" data-title="Elasticsearch como ferramenta de busca" data-image-url="https://www.rtancman.com.br/img/posts/2020/06/elasticsearch-como-ferramenta-de-busca.jpg" data-hashtags="#rtancman" style="width: 100%"></div>
+
+      <p>Boa parte dos sistemas tem uma ferramenta de busca e a forma como a mesma é implementada pode variar. Faz sentido utilizar o banco de dados atual da aplicação e começar a aplicar algumas features de busca, mas isso pode ser um tiro no pé quando você quer de fato entregar o melhor documento dada uma determinada busca. Nesses casos, o elasticsearch é a ferramenta que vai trazer documentos relevantes para um resultado de busca. Vamos entender nesse artigo o que é essa ferramenta e executar os principais comandos do dia a dia. No final iremos subir um cluster no docker e ver a parte de monitoramento utilizando o kibana.</p>
+
+<h3 id="o-que-é-o-elasticsearch">O que é o elasticsearch?</h3>
+
+<p>É um sistema de busca distribuído baseado no Apache Lucene. A sua API Rest é simples e robusta. Além disso, é uma ferramenta completa, veloz e de escalabilidade distribuída. Foi lançado pela primeira vez em 2010 pela Elasticsearch e é uma ferramenta de alta confiabilidade e robustez. Muitas empresas utilizam essa ferramenta e já vi por lugares que passei diversas soluções sendo criadas com ele.</p>
+
+<p>Um dos motivos da sua velocidade é o <a href="https://en.wikipedia.org/wiki/Inverted_index">índice invertido</a>. Que é projetado para permitir buscas de texto completo muito rápidas. Um índice invertido lista cada palavra exclusiva que apareça em qualquer documento e identifica todos os documentos em que cada palavra aparece. <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/documents-indices.html">Nesta sessão da documentação</a> do elasticsearch temos mais detalhes de porque ele é rápido e como essa distribuição acontece.</p>
+
+<p>Agora focando na relevância dos documentos retornados no resultado, elasticsearch utiliza algoritmos de similaridade para criar um score único e com esse valor ele ordena os resultados dos mais relevantes para os menos relevantes baseado em uma query feita pelo usuário. Por default a partir da versão 7, utiliza o <a href="https://en.wikipedia.org/wiki/Okapi_BM25">BM25</a> que é uma função de ranking para calcular quão importante cada documento. Além do BM25 existem outros algoritmos e você pode ver nessa sessão da documentação <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules-similarity.html">“Similarity module”</a> mas o atual da conta recado é um dos melhores algoritmos de ranking.</p>
+
+<p>Recomendo a leitura da documentação da ferramenta para maior entendimento de como as coisa funcionam por debaixo dos panos e principalmente para entender como funciona a análise de textos que você pode acessar aqui nessa sessão de <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis.html#analysis">“Text analysis”</a> . Vamos entender na prática como podemos interagir com essa ferramenta e quão simples e subir um cluster.</p>
+
+<h3 id="rodando-o-elasticsearch-localmente">Rodando o elasticsearch localmente</h3>
+
+<p>O elasticsearch como é uma solução construída em Java, você basicamente precisa baixar o mesmo e rodar localmente. Eu recomendo sempre utilizar os gerenciadores de pacotes do seu SO para realizar essa instalação. Mas para esse artigo vamos utilizar o docker e docker-compose para facilitar todo o setup. Então vamos entender o que vamos instalar que serão as seguintes ferramentas:</p>
+
+<ul>
+  <li>Elasticsearch: Que é o sistema de busca.</li>
+  <li>Kibana: É o cliente para gerenciar o elasticsearch além de ter ferramentas de monitoramento e um cliente rico para rodar queries no elastic.</li>
+</ul>
+
+<p>Vamos a configuração do arquivo docker-compose.yml:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">2.2'</span>
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">es</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">docker.elastic.co/elasticsearch/elasticsearch:7.8.0</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">es</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">node.name=es</span>
+      <span class="pi">-</span> <span class="s">cluster.name=es-docker-cluster</span>
+      <span class="pi">-</span> <span class="s">discovery.seed_hosts=es</span>
+      <span class="pi">-</span> <span class="s">cluster.initial_master_nodes=es</span>
+      <span class="pi">-</span> <span class="s">bootstrap.memory_lock=true</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">ES_JAVA_OPTS=-Xms512m</span><span class="nv"> </span><span class="s">-Xmx512m"</span>
+    <span class="na">ulimits</span><span class="pi">:</span>
+      <span class="na">memlock</span><span class="pi">:</span>
+        <span class="na">soft</span><span class="pi">:</span> <span class="s">-1</span>
+        <span class="na">hard</span><span class="pi">:</span> <span class="s">-1</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">es_data:/usr/share/elasticsearch/data</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">9200:9200</span>
+    <span class="na">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">elastic</span>
+
+  <span class="na">kibana</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">docker.elastic.co/kibana/kibana:7.8.0</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">kibana</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">5601:5601</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="na">ELASTICSEARCH_URL</span><span class="pi">:</span> <span class="s">http://es:9200</span>
+      <span class="na">ELASTICSEARCH_HOSTS</span><span class="pi">:</span> <span class="s">http://es:9200</span>
+    <span class="na">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">elastic</span>
+
+<span class="na">volumes</span><span class="pi">:</span>
+  <span class="na">es_data</span><span class="pi">:</span>
+    <span class="na">driver</span><span class="pi">:</span> <span class="s">local</span>
+
+<span class="na">networks</span><span class="pi">:</span>
+  <span class="na">elastic</span><span class="pi">:</span>
+    <span class="na">driver</span><span class="pi">:</span> <span class="s">bridge</span>
+</code></pre></div></div>
+
+<p>Essa configuração foi feita com base na documentação do elasticsearch <a href="https://www.elastic.co/guide/en/elastic-stack-get-started/current/get-started-docker.html">“Running the Elastic Stack on Docker”</a> e simplifiquei por hora para a gente entender como as coisas funcionam. Agora podemos executar o comando docker-compose up.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose up <span class="nt">-d</span>
+</code></pre></div></div>
+
+<p>Agora com a aplicação rodando podemos acessar o kibana pela url <a href="http://localhost:5601/">http://localhost:5601/</a>. Pode ser que demore um pouquinho para subir e você pode conferir se tudo está funcionando verificando se os containers estão de pé. Para isso basta executar:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># containers que estão rodando</span>
+<span class="nv">$ </span>docker ps
+CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES
+011da05e9bd2 docker.elastic.co/elasticsearch/elasticsearch:7.8.0 <span class="s2">"/tini -- /usr/local..."</span> 4 hours ago Up 4 hours 0.0.0.0:9200-&gt;9200/tcp, 9300/tcp es01
+961846fb5ae6 docker.elastic.co/kibana/kibana:7.8.0 <span class="s2">"/usr/local/bin/dumb..."</span> 4 hours ago Up 4 hours 0.0.0.0:5601-&gt;5601/tcp kib01
+
+<span class="c"># para ver os logs</span>
+<span class="nv">$ </span>docker logs es01
+<span class="nv">$ </span>docker logs kib01
+
+<span class="c"># checando o servico elasticsearch</span>
+<span class="nv">$ </span>curl <span class="nt">-X</span> GET <span class="s2">"localhost:9200/_cat/indices?v&amp;pretty"</span>
+health status index uuid pri rep docs.count docs.deleted store.size pri.store.size
+green open .kibana-event-log-7.8.0-000001 7fJFAISuQRaEqZcWLBH7oA 1 0 3 0 15.5kb 15.5kb
+green open .apm-custom-link BijrW0OUQOOw7RSGJcz9HA 1 0 0 0 208b 208b
+green open .kibana_task_manager_1 FvG7WnppQ6WioFlyQTF17Q 1 0 5 0 14.1kb 14.1kb
+green open .apm-agent-configuration Qh9Ye6CgSMu_aIrulqZFsQ 1 0 0 0 208b 208b
+green open .kibana_1 kd3OSBtlSGyjKCIze8VVvQ 1 0 26 6 63kb 63kb
+
+<span class="nv">$ </span>curl <span class="nt">-X</span> GET <span class="s2">"localhost:9200/_cat/nodes?v&amp;pretty"</span>
+ip heap.percent ram.percent cpu load_1m load_5m load_15m node.role master name
+172.21.0.3 20 96 5 0.85 1.52 1.08 dilmrt <span class="k">*</span> <span class="s1">'es01'</span>
+</code></pre></div></div>
+
+<p>Agora que verificamos que esta tudo está rodando normalmente vamos explorar o elasticsearch pelo kibana.</p>
+
+<h3 id="executando-comandos-do-elasticsearch">Executando comandos do elasticsearch</h3>
+
+<p>Vamos explorar o elasticsearch realizando operações. Com o kibana aberto vamos acessar o Console web dele para rodar as operações.</p>
+
+<iframe width="100%" height="315" src="https://www.youtube.com/embed/jA83LpR-gmo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+
+<p>Caso você não tenha encontrado o console basta acessar a url <a href="http://0.0.0.0:5601/app/kibana#/dev_tools/console">http://0.0.0.0:5601/app/kibana#/dev_tools/console</a> ou então rodar os comandos diretamente pelo seu terminal utilizando o curl. Nestes exemplos vou disponibilizar as 2 formas. Vamos acessar a API do elasticsearch:</p>
+
+<h4 id="api-cat----cat-indices-api">API Cat -  <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/cat-indices.html#cat-indices">cat indices API</a></h4>
+
+<h4 id="lista-os-indices-que-temos-dispóniveis">Lista os indices que temos dispóniveis</h4>
+<p>Podemos acessar os outros recursos na sessão da documentação <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/cat.html">cat APIs</a>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># chamada no kibana</span>
+
+GET /_cat/indices
+
+<span class="c"># curl para rodar no terminal</span>
+<span class="nv">$ </span>curl <span class="nt">-XGET</span> <span class="s2">"http://localhost:9200/_cat/indices"</span>
+</code></pre></div></div>
+
+<p>Provavelmente você deve ter tido o seguinte resultado:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>green open .kibana-event-log-7.8.0-000001 7fJFAISuQRaEqZcWLBH7oA 1 0 4 0 20.6kb 20.6kb
+green open .apm-custom-link BijrW0OUQOOw7RSGJcz9HA 1 0 0 0 208b 208b
+green open .kibana_task_manager_1 FvG7WnppQ6WioFlyQTF17Q 1 0 5 0 14.1kb 14.1kb
+green open .apm-agent-configuration Qh9Ye6CgSMu_aIrulqZFsQ 1 0 0 0 208b 208b
+green open .kibana_1 kd3OSBtlSGyjKCIze8VVvQ 1 0 38 4 77.2kb 77.2kb
+</code></pre></div></div>
+<p>Estes são os índices que o kibana cria. Agora vamos criar um índice e trabalhar em cima dele.</p>
+
+<h3 id="trabalhando-com-indices">Trabalhando com indices</h3>
+
+<h4 id="criando-um-índice-create-index-api">Criando um índice <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html">“Create index API”</a></h4>
+
+<p>Vamos dar uma olhada em como podemos criar index.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># chamada no kibana</span>
+PUT /meu_primeiro_index
+
+<span class="c"># curl para rodar no terminal</span>
+curl <span class="nt">-XPUT</span> <span class="s2">"http://localhost:9200/meu_primeiro_index"</span>
+</code></pre></div></div>
+
+<p>Dessa forma criamos um índice sem nenhum atributo. Os índices são responsáveis por armazenar os nosso documentos e nele podemos usar diversos tipos que você pode ver os suportados nessa sessão da documentação <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-types.html">“Field datatypes”</a>. Agora vamos criar um índice com alguns campos.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># chamada no kibana</span>
+PUT /filmes
+<span class="o">{</span>
+  <span class="s2">"mappings"</span>: <span class="o">{</span>
+    <span class="s2">"properties"</span>: <span class="o">{</span>
+      <span class="s2">"nome"</span>: <span class="o">{</span>
+        <span class="s2">"type"</span>: <span class="s2">"text"</span>
+      <span class="o">}</span>,
+      <span class="s2">"descricao"</span>: <span class="o">{</span>
+        <span class="s2">"type"</span>: <span class="s2">"text"</span>
+      <span class="o">}</span>,
+      <span class="s2">"nota"</span>: <span class="o">{</span>
+        <span class="s2">"type"</span>: <span class="s2">"float"</span>
+      <span class="o">}</span>,
+      <span class="s2">"classificao"</span>: <span class="o">{</span>
+        <span class="s2">"type"</span>: <span class="s2">"text"</span>
+      <span class="o">}</span>,
+      <span class="s2">"data_lancamento"</span>: <span class="o">{</span>
+        <span class="s2">"type"</span>: <span class="s2">"date"</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+
+<span class="c"># curl para rodar no terminal</span>
+curl <span class="nt">-XPUT</span> <span class="s2">"http://localhost:9200/filmes"</span> <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span><span class="s1">'{  "mappings": {    "properties": {      "nome": {        "type": "text"      },      "descricao": {        "type": "text"      },      "nota": {        "type": "float"      },      "classificao": {        "type": "text"      },      "data_lancamento": {        "type": "date"      }    }  }}'</span>
+</code></pre></div></div>
+
+<p>Após a sua criação podemos visualizar a sua estrutura da seguinte forma:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># chamada no kibana</span>
+GET /filmes/_mapping
+GET /filmes/_settings
+
+
+<span class="c"># curl para rodar no terminal</span>
+curl <span class="nt">-XGET</span> <span class="s2">"http://localhost:9200/filmes/_mapping"</span>
+curl <span class="nt">-XGET</span> <span class="s2">"http://localhost:9200/filmes/_settings"</span>
+</code></pre></div></div>
+
+<ul>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping.html">Mapping</a> : Descreve as propriedades de um documento que vai ser inserido em um índice.</li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules.html#index-modules">Settings</a>: Descreve as configurações de um índice. Aqui são configurados um recurso muito interessante que são os <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis.html">analyzers, tokenizers, token filters and character filters.</a></li>
+</ul>
+
+<h3 id="manipulando-documentos-document-apis">Manipulando documentos <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docs.html">“Document APIs”</a></h3>
+
+<p>Nesta parte vamos entender como inserir, editar, ler e remover documentos dos indices. Vamos lá!</p>
+
+<h4 id="criando-documentos-index-api">Criando documentos <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-index_.html">“Index API”</a>:</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># chamada no kibana</span>
+POST /filmes/_doc/
+<span class="o">{</span>
+  <span class="s2">"nome"</span>: <span class="s2">"Matrix"</span>,
+  <span class="s2">"descricao"</span>: <span class="s2">"Melhor filme ever!"</span>,
+  <span class="s2">"classificao"</span>: <span class="s2">"livre"</span>,
+  <span class="s2">"nota"</span>: 10,
+  <span class="s2">"data_lancamento"</span>: <span class="s2">"1999-05-21T14:12:12"</span>
+<span class="o">}</span>
+
+
+<span class="c"># curl para rodar no terminal</span>
+curl <span class="nt">-XPOST</span> <span class="s2">"http://localhost:9200/filmes/_doc/"</span> <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span><span class="s1">'{  "nome": "Matrix",  "descricao": "Melhor filme ever!",  "classificao": "livre",  "nota": 10,  "data_lancamento": "1999-05-21T14:12:12"}'</span>
+</code></pre></div></div>
+
+<h4 id="editando-documentos-update-api">Editando documentos <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-update.html">“Update API”</a>:</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># chamada no kibana</span>
+POST filmes/_update/-DEY_XIBblRt4Ct0995B
+<span class="o">{</span>
+  <span class="s2">"doc"</span>: <span class="o">{</span>
+    <span class="s2">"classificao"</span>: <span class="s2">"Não recomendado para menores de doze anos"</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+
+<span class="c"># curl para rodar no terminal</span>
+curl <span class="nt">-XPOST</span> <span class="s2">"http://localhost:9200/filmes/_update/-DEY_XIBblRt4Ct0995B"</span> <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span><span class="s1">'{  "doc": {    "classificao": "Não recomendado para menores de doze anos"  }}'</span>
+</code></pre></div></div>
+
+<h4 id="lendo-documentos-get-api">Lendo documentos <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-get.html">“Get API”</a>:</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># chamada no kibana</span>
+GET filmes/_doc/-DEY_XIBblRt4Ct0995B
+
+<span class="c"># curl para rodar no terminal</span>
+curl <span class="nt">-XGET</span> <span class="s2">"http://localhost:9200/filmes/_doc/-DEY_XIBblRt4Ct0995B"</span>
+</code></pre></div></div>
+
+<h4 id="removendo-documentos-delete-api">Removendo documentos <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-delete.html">“Delete API”</a>:</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># chamada no kibana</span>
+DELETE filmes/_doc/-DEY_XIBblRt4Ct0995B
+
+<span class="c"># curl para rodar no terminal</span>
+curl <span class="nt">-XDELETE</span> <span class="s2">"http://localhost:9200/filmes/_doc/-DEY_XIBblRt4Ct0995B"</span>
+</code></pre></div></div>
+
+<h3 id="realizando-buscas">Realizando buscas</h3>
+
+<p>Vamos entender como fazer queries no elasticsearch. Para isso vamos continuar explorando o nosso índice recém criado de filmes. Vamos popular o mesmo com alguns filmes utilizando o <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html">“Bulk API”</a> para inserir vários documentos na mesma requisição.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /filmes/_bulk
+<span class="o">{</span><span class="s2">"index"</span>:<span class="o">{}}</span>
+<span class="o">{</span><span class="s2">"nome"</span>:<span class="s2">"Matrix"</span>,<span class="s2">"descricao"</span>:<span class="s2">"Melhor filme ever!"</span>,<span class="s2">"classificao"</span>:<span class="s2">"Não recomendado para menores de doze anos"</span>,<span class="s2">"nota"</span>:10,<span class="s2">"data_lancamento"</span>:<span class="s2">"1999-05-21T14:12:12"</span><span class="o">}</span>
+<span class="o">{</span><span class="s2">"index"</span>:<span class="o">{}}</span>
+<span class="o">{</span><span class="s2">"nome"</span>:<span class="s2">"Matrix Reloaded"</span>,<span class="s2">"descricao"</span>:<span class="s2">"Melhor filme ever!!!!"</span>,<span class="s2">"classificao"</span>:<span class="s2">"Não recomendado para menores de doze anos"</span>,<span class="s2">"nota"</span>:8.5,<span class="s2">"data_lancamento"</span>:<span class="s2">"2003-05-15T11:30:00"</span><span class="o">}</span>
+<span class="o">{</span><span class="s2">"index"</span>:<span class="o">{}}</span>
+<span class="o">{</span><span class="s2">"nome"</span>:<span class="s2">"Matrix Revolutions"</span>,<span class="s2">"descricao"</span>:<span class="s2">"Melhor filme ever!!!!"</span>,<span class="s2">"classificao"</span>:<span class="s2">"Não recomendado para menores de doze anos"</span>,<span class="s2">"nota"</span>:8.9,<span class="s2">"data_lancamento"</span>:<span class="s2">"2003-11-05T11:30:00"</span><span class="o">}</span>
+<span class="o">{</span><span class="s2">"index"</span>:<span class="o">{}}</span>
+<span class="o">{</span><span class="s2">"nome"</span>:<span class="s2">"Matrix 4"</span>,<span class="s2">"descricao"</span>:<span class="s2">"Melhor filme ever!!!!"</span>,<span class="s2">"classificao"</span>:<span class="s2">"Não recomendado para menores de doze anos"</span>,<span class="s2">"nota"</span>:0,<span class="s2">"data_lancamento"</span>:<span class="s2">"2022-04-01T11:30:00"</span><span class="o">}</span>
+
+
+
+<span class="c"># curl para rodar no terminal</span>
+curl <span class="nt">-XPOST</span> <span class="s2">"http://localhost:9200/filmes/_bulk"</span> <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span><span class="s1">'{"index":{}}{"nome":"Matrix","descricao":"Melhor filme ever!","classificao":"Não recomendado para menores de doze anos","nota":10,"data_lancamento":"1999-05-21T14:12:12"}{"index":{}}{"nome":"Matrix Reloaded","descricao":"Melhor filme ever!!!!","classificao":"Não recomendado para menores de doze anos","nota":8.5,"data_lancamento":"2003-05-15T11:30:00"}{"index":{}}{"nome":"Matrix Revolutions","descricao":"Melhor filme ever!!!!","classificao":"Não recomendado para menores de doze anos","nota":8.9,"data_lancamento":"2003-11-05T11:30:00"}{"index":{}}{"nome":"Matrix 4","descricao":"Melhor filme ever!!!!","classificao":"Não recomendado para menores de doze anos","nota":0,"data_lancamento":"2022-04-01T11:30:00"}'</span>
+</code></pre></div></div>
+
+<p>Com o nosso índice populado vamos realizar algumas queries utilizando a <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html">“Search API”</a>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># chamada no kibana</span>
+GET /filmes/_search
+
+GET filmes/_search
+<span class="o">{</span>
+  <span class="s2">"query"</span>: <span class="o">{</span>
+    <span class="s2">"match"</span>: <span class="o">{</span>
+      <span class="s2">"nome"</span>: <span class="s2">"Matrix"</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+GET filmes/_search
+<span class="o">{</span>
+  <span class="s2">"query"</span>: <span class="o">{</span>
+    <span class="s2">"match"</span>: <span class="o">{</span>
+      <span class="s2">"nome"</span>: <span class="s2">"Matrix"</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+
+GET /filmes/_search
+<span class="o">{</span>
+  <span class="s2">"query"</span>: <span class="o">{</span>
+    <span class="s2">"range"</span>: <span class="o">{</span>
+      <span class="s2">"nota"</span>: <span class="o">{</span>
+        <span class="s2">"gte"</span>: 2,
+        <span class="s2">"lte"</span>: 9
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+
+<span class="c"># curl para rodar no terminal</span>
+curl <span class="nt">-XGET</span> <span class="s2">"http://localhost:9200/filmes/_search"</span>
+
+curl <span class="nt">-XGET</span> <span class="s2">"http://localhost:9200/filmes/_search"</span> <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span><span class="s1">'{  "query": {    "match": {      "nome": "Matrix"    }  }}'</span>
+
+curl <span class="nt">-XGET</span> <span class="s2">"http://localhost:9200/filmes/_search"</span> <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span><span class="s1">'{  "query": {    "range": {      "nota": {        "gte": 2,        "lte": 9      }    }  }}'</span>
+</code></pre></div></div>
+
+<p>Acima utilizamos queries com o <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html">match</a> e <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-range-query.html">range</a>. São queries simples mas analisando a documentação você pode incrementar esses filtros conforme a sua necessidade.</p>
+
+<p>Se você chegou até aqui PARABÉNS!!! Você agora já sabe criar documentos e pesquisar os mesmos. Vamos seguir nosso artigo transformando agora nosso elasticsearch em cluster com mais nodes.</p>
+
+<h3 id="criando-um-cluster-elasticsearch">Criando um cluster elasticsearch</h3>
+
+<p>Vamos seguir utilizando o docker mas a configuração continua sendo a mesma e você basicamente precisa incluir essas propriedades no arquivo de configuração do elasticsearch que geralmente fica no /usr/share/elasticsearch/config/elasticsearch.yml ou você pode criar variáveis de ambientes seguindo o nome das chaves utilizadas. São elas:</p>
+
+<ul>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster.name.html">cluster.name</a></li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/discovery-settings.html#unicast.hosts">discovery.seed_hosts</a></li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/discovery-settings.html#initial_master_nodes">cluster.initial_master_nodes</a></li>
+</ul>
+
+<p>Com isso agora vamos alterar o nosso docker-compose.yml para os seguintes valores:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">2.2'</span>
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">es01</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">docker.elastic.co/elasticsearch/elasticsearch:7.8.0</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">es01</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">node.name=es01</span>
+      <span class="pi">-</span> <span class="s">cluster.name=es-docker-cluster</span>
+      <span class="pi">-</span> <span class="s">discovery.seed_hosts=es02</span>
+      <span class="pi">-</span> <span class="s">cluster.initial_master_nodes=es01</span>
+      <span class="pi">-</span> <span class="s">bootstrap.memory_lock=true</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">ES_JAVA_OPTS=-Xms256m</span><span class="nv"> </span><span class="s">-Xmx256m"</span>
+    <span class="na">ulimits</span><span class="pi">:</span>
+      <span class="na">memlock</span><span class="pi">:</span>
+        <span class="na">soft</span><span class="pi">:</span> <span class="s">-1</span>
+        <span class="na">hard</span><span class="pi">:</span> <span class="s">-1</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">data01:/usr/share/elasticsearch/data</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">9200:9200</span>
+    <span class="na">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">elastic</span>
+
+  <span class="na">es02</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">docker.elastic.co/elasticsearch/elasticsearch:7.8.0</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">es02</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">node.name=es02</span>
+      <span class="pi">-</span> <span class="s">cluster.name=es-docker-cluster</span>
+      <span class="pi">-</span> <span class="s">discovery.seed_hosts=es01</span>
+      <span class="pi">-</span> <span class="s">cluster.initial_master_nodes=es01</span>
+      <span class="pi">-</span> <span class="s">bootstrap.memory_lock=true</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">ES_JAVA_OPTS=-Xms256m</span><span class="nv"> </span><span class="s">-Xmx256m"</span>
+    <span class="na">ulimits</span><span class="pi">:</span>
+      <span class="na">memlock</span><span class="pi">:</span>
+        <span class="na">soft</span><span class="pi">:</span> <span class="s">-1</span>
+        <span class="na">hard</span><span class="pi">:</span> <span class="s">-1</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">data02:/usr/share/elasticsearch/data</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">9201:9200</span>
+    <span class="na">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">elastic</span>
+
+  <span class="na">kib01</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">docker.elastic.co/kibana/kibana:7.8.0</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">kib01</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">5601:5601</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="na">XPACK_APM_SERVICEMAPENABLED</span><span class="pi">:</span> <span class="s1">'</span><span class="s">false'</span>
+      <span class="na">ELASTICSEARCH_URL</span><span class="pi">:</span> <span class="s">http://es01:9200</span>
+      <span class="na">ELASTICSEARCH_HOSTS</span><span class="pi">:</span> <span class="s">http://es01:9200</span>
+    <span class="na">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">elastic</span>
+
+<span class="na">volumes</span><span class="pi">:</span>
+  <span class="na">data01</span><span class="pi">:</span>
+    <span class="na">driver</span><span class="pi">:</span> <span class="s">local</span>
+  <span class="na">data02</span><span class="pi">:</span>
+    <span class="na">driver</span><span class="pi">:</span> <span class="s">local</span>
+
+<span class="na">networks</span><span class="pi">:</span>
+  <span class="na">elastic</span><span class="pi">:</span>
+    <span class="na">driver</span><span class="pi">:</span> <span class="s">bridge</span>
+</code></pre></div></div>
+
+<p>Em seguida vamos rodar o comando do docker-compose para recriar os containers:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose up <span class="nt">-d</span>
+</code></pre></div></div>
+
+<p>Agora precisamos aguardar os containers subirem com sucesso. Em alguns casos caso você tenha uma máquina com poucos recursos recomendo alterar a configuração no docker-compose.yml <code class="language-plaintext highlighter-rouge">ES_JAVA_OPTS=-Xms256m -Xmx256m</code> devido a problemas de recursos em sua máquina local mesmo.</p>
+
+<p>Caso os containers estejam rodando normalmente, agora vou te mostrar abaixo a parte de monitoramento do kibana para agente acessar o nosso cluster e verificar se tudo está rodando corretamente. Vamos lá!</p>
+
+<iframe width="100%" height="315" src="https://www.youtube.com/embed/3ljxqJ3pEcw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+
+<h3 id="resumindo">Resumindo</h3>
+
+<p>Neste post vimos o que é o elasticsearch e como ele funciona. Subimos um elastic local utilizando docker e docker-compose e nos conectamos ao kibana para executar as queries. Além disso também vimos como configurar um cluster localmente para testes e visualizamos no kibana a área de monitoramento em geral.</p>
+
+<p>Nos próximos posts vamos construir um serviço de busca utilizando a linguagem de programação Go. Também iremos evoluir o nosso índice “filmes” aplicando boas práticas para um sistema de busca com o elasticsearch.</p>
+
+<p>Grande Abraço!</p>
+
+
+      
+      <div id="disqus_thread"></div>
+      <script>
+      /**
+      *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+      *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+      
+      var disqus_config = function () {
+        this.page.url = 'https://www.rtancman.com.br/elasticsearch/elasticsearch-como-ferramenta-de-busca.html';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://www.rtancman.com.br/elasticsearch/elasticsearch-como-ferramenta-de-busca.html'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      };
+
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://rtancman.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      
+      
+      <div class="clearfix">
+
+        
+        <hr />
+        <a class="btn btn-primary float-left" href="/carreira/de-software-engineer-para-search-ranking-engineer.html" data-toggle="tooltip" data-placement="top" title="De Software Engineer para Search Ranking Engineer">&larr; Previous<span class="d-none d-md-inline"> Post</span></a>
+        
+        
+        <a class="btn btn-primary float-right" href="/kubernetes/kubernetes-para-iniciantes-parte-2.html" data-toggle="tooltip" data-placement="top" title="Kubernetes para iniciantes - Parte 2">Next<span class="d-none d-md-inline"> Post</span> &rarr;</a>
+        
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+    <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="https://www.twitter.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://www.facebook.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://linkedin.com/in/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; Raffael Tancman 2014 - 2022</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <div id="fb-root"></div>
+<script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+  <script src="/assets/vendor/share-bar/js/share.bar.min.js"></script>
+  <script>
+  new ShareBar({
+    'facebookAppId': '246280775508572',
+    'networks': [
+      'facebook',
+      'twitter',
+      'linkedin',
+    ],
+    buttonFullWidth: 150,
+  });
+  </script>
+
+
+  </body>
+
+</html>

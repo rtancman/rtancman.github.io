@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    Kubernetes para iniciantes - Raffael Tancman
+    
+  </title>
+
+  <link rel="icon" type="image/png" href="/img/favicon.png" />
+  
+    <meta property="description" content="Meu diário de bordo contando como foi a minha primeira experiência com Kubernetes." />
+  
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/vendor/share-bar/css/share.bar.min.css">
+  
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://www.rtancman.com.br/kubernetes/kubernetes-para-iniciantes.html">
+  <link rel="alternate" type="application/rss+xml" title="Raffael Tancman" href="/feed.xml">
+  
+  <meta property="og:url" content="https://www.rtancman.com.br/kubernetes/kubernetes-para-iniciantes.html" />
+  <meta property="og:type" content="website" />
+  
+    <meta property="og:title" content="Kubernetes para iniciantes - Raffael Tancman" />
+    
+      <meta property="og:description" content="Meu diário de bordo contando como foi a minha primeira experiência com Kubernetes." />
+    
+    
+      <meta property="og:image" content="https://www.rtancman.com.br/img/posts/2020/06/kubernetes-para-iniciantes.jpg" />
+    
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-RZN9');</script>
+  <!-- End Google Tag Manager -->
+  <!-- Facebook -->
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '246280775508572',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v3.2'
+      });
+      FB.AppEvents.logPageView();   
+    };
+  
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+  <!-- End Facebook -->
+</head>
+
+
+  <body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">Raffael Tancman</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+    <!-- Page Header -->
+
+<header class="masthead" style="background-image: url('/img/posts/2020/06/kubernetes-para-iniciantes.jpg')">
+
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-heading">
+          <h1>Kubernetes para iniciantes</h1>
+          
+          <h2 class="subheading">Meu diário de bordo contando como foi a minha primeira experiência com Kubernetes.</h2>
+          
+          <span class="meta">Posted by <a href="/about">Raffael Tancman</a> on June 15, 2020</span>
+          
+
+<span><i class="fa fa-clock-o fa-inverse" aria-hidden="true"></i> 14 min de leitura</span>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container container-posts">
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      <div class="share-bar" data-url="https://www.rtancman.com.br/kubernetes/kubernetes-para-iniciantes.html" data-title="Kubernetes para iniciantes" data-image-url="https://www.rtancman.com.br/img/posts/2020/06/kubernetes-para-iniciantes.jpg" data-hashtags="#rtancman" style="width: 100%"></div>
+
+      <p>Me lembro como se fosse hoje quando comecei a virtualizar o meu ambiente de desenvolvimento. Antes rodava tudo em uma VM do VirtualBox montando o diretório do meu projeto na VM. Com o passar dos tempos acabei conhecendo o <a href="https://www.vagrantup.com/">Vagrant</a> e mais a frente o <a href="https://www.docker.com/">Docker</a> que foi amor à primeira vista! Desde então passei a gerenciar meu ambiente de desenvolvimento com docker-compose.</p>
+
+<p>Participei de um movimento de migrar aplicações que rodam no heroku para o Google Cloud utilizando o serviço Kubernetes Engine o GKE. Nesse projeto eu trabalhei bem superficialmente com k8s, apelido do kubernetes. Atualmente venho trabalhando diariamente com essa ferramenta e neste artigo vou contar como foi todo o meu aprendizado e sintetizar os principais casos do dia a dia.</p>
+
+<h3 id="o-que-é-o-kubernetes">O que é o Kubernetes?</h3>
+
+<p>É um gerenciador de containers onde utilizamos uma sintaxe declarativa para criar nossos serviços na cloud. O kubernetes veio nessa era de containers para facilitar todas as operações e boas práticas que temos hoje disponíveis em cloud para deployar suas aplicações. Com isso foi sendo construído um ecossistema em volta dessa tecnologia com muitos serviços e plugins tais como recursos de monitoração, autoscale, blue-green deployments, service discovery e muitos outros disponíveis pela comunidade.</p>
+
+<h3 id="como-ele-funciona">Como ele funciona?</h3>
+
+<p><img alt="k8s arquitetura" src="/img/posts/2020/06/k8s-arquitetura.png" style="max-width: 992px;width: 100%;" />
+Fonte: kubernetes.io</p>
+
+<p>De forma resumidamente o k8s é uma aplicação em Go que se comunica através de uma API. O Docker não consegue gerenciar containers de maneira remota e é aí que o k8s passa a fazer sentido. Essa arquitetura acima foi retirada do site oficial do kubernetes e pode ser acessada <a href="https://kubernetes.io/docs/concepts/overview/components/">aqui</a> onde temos a documentação que detalha esse processo por inteiro. Mas para vocês entenderem de uma forma geral, temos 2 nodes onde em 1 temos rodando a API do k8s com todo os seus componentes como etcd que é o banco de chave valor onde ficam salvas todas as configurações e no segundo node temos o kubelet que é o cliente responsável em se comunicar com a API do k8s e aplicar as alterações nos containers que rodam em cada máquina.</p>
+
+<p>O objetivo desse artigo é ser um guia prático de como você pode executar os serviços em ambiente local ou até mesmo em cloud, não vou entrar em detalhes de como funciona todos os componentes do kubernetes. Para isso você pode e deve ler a documentação para entender como essa ferramenta irá te ajudar no dia a dia. <a href="https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/">Neste link você confere a documentação do Kubernetes que é bem completa e repleta de exemplos.</a></p>
+
+<p>Agora precisamos instalar o nosso ambiente de trabalho que basicamente vai precisar do Docker, Kubernetes e algumas outras aplicações para deployar o nosso sistema.</p>
+
+<h3 id="instalação">Instalação:</h3>
+
+<p>Vamos precisar instalar o <a href="http://kubernetes.io/docs/tasks/tools/install-kubectl/">kubectl</a> e o <a href="http://github.com/kubernetes/minikube#installation">minikube</a> para quem tem linux. No  mac, o próprio docker já tem um suporte para subir um cluster k8s. Caso você esteja rodando no mac, segue um tutorial de como levantar um cluster local <a href="https://xebia.com/blog/running-kubernetes-locally-docker-mac-os-x/">nesse link aqui</a>.</p>
+
+<ul>
+  <li>Kubectl: É o CLI para iteragir com o cluster k8s.</li>
+  <li>Minikube: Simula em uma VM o funcionamento de um cluster k8s em ambiente local.</li>
+</ul>
+
+<p>Para você já sair executando os comandos do kubectl recomendo esses playgrounds:</p>
+<ul>
+  <li><a href="https://www.katacoda.com/courses/kubernetes/playground">Katacoda</a></li>
+  <li><a href="https://labs.play-with-k8s.com/">Play with Kubernetes</a></li>
+</ul>
+
+<p>Agora que já temos um um cluster rodando, vamos iniciar dar uma explorada nos principais comandos do k8s que vamos utilizar durante o desenvolvimento.</p>
+
+<p>O k8s permite que você gerencie diversos clusters e por isso e sempre bom ver os que estão configurados com o comando <code class="language-plaintext highlighter-rouge">kubectl config get-contexts</code>. Exemplo:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl config get-contexts
+CURRENT NAME CLUSTER AUTHINFO NAMESPACE
+
+docker-desktop docker-desktop docker-desktop
+
+<span class="k">*</span> docker-for-desktop docker-desktop docker-desktop
+</code></pre></div></div>
+
+<p>Para selecionar um contexto você roda o seguinte comando:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl config use-context docker-for-desktop
+</code></pre></div></div>
+
+<p>Esses passos são importantes principalmente se você já tem acesso a um cluster k8s na sua máquina para não criar nada em cluster que já exista ;)</p>
+
+<h3 id="k8s-em-prática-com-um-pod-simples">K8S em prática com um pod simples</h3>
+
+<p>Vamos subir agora um Pod com o Wordpress baseado em uma imagem do Docker que está disponível no <a href="https://hub.docker.com/_/wordpress/">hub docker do wordpress</a> para testar alguns dos comandos do k8s. Não se preocupe com o arquivo abaixo vamos entender ele melhor mais a frente ;)</p>
+
+<p>Crie o arquivo wp-dumb.yaml com o seguinte conteudo abaixo:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Pod</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">wordpress</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">containers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-wp-1</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">wordpress:php7.2-fpm</span>
+    <span class="na">ports</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">9000</span>
+</code></pre></div></div>
+
+<p>Agora vamos subir o nosso primeiro Pod! Para isso vamos rodar o seguinte comando:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl apply <span class="nt">-f</span> wp-dumb.yaml
+</code></pre></div></div>
+
+<p>Acima vimos o nosso primeiro comando o kubectl apply como vocês já viram, ele é responsável em aplicar alterações feita no arquivo wp-dumb.yaml. Após ele aplicar essa alteração o k8s se encarrega em subir um Pod com a configuração descrita no manifesto do aquivo wp-dumb.yaml. Agora podemos rodar outros comandos para visualizar como esta este Pod recem criado.</p>
+
+<p>Para listar todos os pods rodando vamos executar o <a href="https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get">kubectl get</a>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl get pods
+
+<span class="c">#resultado</span>
+
+NAME READY STATUS RESTARTS AGE
+
+meu-blog 1/1 Running 0 59s
+</code></pre></div></div>
+
+<p>O comando get diz como está o nosso Pod em nosso cluster. Veja em detalhes:</p>
+
+<ul>
+  <li>NAME: é o nome do Pod. E este nome é ÚNICO.</li>
+  <li>READY: diz que o nosso Pod está rodando / pronto.</li>
+  <li>STATUS: é o status atual de execução</li>
+  <li>RESTARTS: quantidade de restarts que o pod teve</li>
+  <li>AGE: A quanto tempo ele foi criado</li>
+</ul>
+
+<p><a href="https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get">Aqui na documentação do k8s</a> você tem todos os exemplos dos comandos a serem executados. Mas vamos falar dos que mais rodamos no dia a dia.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># para buscar um pod por nome</span>
+<span class="nv">$ </span>kubectl get pods meu-blog
+
+<span class="c"># para buscar um pod por label</span>
+<span class="nv">$ </span>kubectl get pods <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>wordpress
+
+<span class="c"># para retornar em outro formato de output</span>
+<span class="nv">$ </span>kubectl get pods <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>wordpress <span class="nt">-o</span> yaml
+<span class="nv">$ </span>kubectl get pods <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>wordpress <span class="nt">-o</span> json
+</code></pre></div></div>
+
+<p>Também podemos acessar esse Pod rodando o <a href="https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#exec">kubectl exec</a>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl <span class="nb">exec</span> <span class="nt">-it</span> meu-blog bash
+root@meu-blog:/var/www/html#
+</code></pre></div></div>
+
+<p>Descrição desse Pod rodando o <a href="https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe">kubectl describe</a>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl describe pods <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>wordpress
+<span class="nv">$ </span>kubectl describe pods meu-blog
+</code></pre></div></div>
+
+<p>Copiando arquivos para o container ou do container para a sua máquina com o comando cp rodando o <a href="https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#cp">kubectl cp</a>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># criando um arquivo qualquer</span>
+<span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"lala"</span> <span class="o">&gt;</span> arquivo-lala.txt
+
+<span class="c"># copiando um arquivo para o container</span>
+<span class="nv">$ </span>kubectl <span class="nb">cp </span>arquivo-lala.txt meu-blog:/var/www/html
+
+<span class="c"># copiando um arquivo do container para sua maquina</span>
+<span class="nv">$ </span>kubectl <span class="nb">cp </span>meu-blog:/var/www/html/arquivo-lala.txt arquivo-lele.txt
+</code></pre></div></div>
+
+<p>Verificando CPU e Memoria com o comando top rodando o <a href="https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#top">kubectl top</a>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl top pods <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>wordpress
+<span class="nv">$ </span>kubectl top pods meu-blog
+</code></pre></div></div>
+
+<p>Remover um Pod rodando o <a href="https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#delete">kubectl delete</a>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl delete pods <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>wordpress
+<span class="nv">$ </span>kubectl delete pods meu-blog
+</code></pre></div></div>
+
+<p>Se você chegou até aqui MEUS PARABÉNS você conseguiu subir um pod e principalmente executar uns dos comandos que mais utilizamos no dia a dia! Na documentação oficial, temos uma parte muito interessante com os “macetes” para servir como um guia quando você não se lembrar exatamente como é cada comando do k8s que é o <a href="https://kubernetes.io/docs/reference/kubectl/cheatsheet/">kubectl Cheat Sheet</a>.</p>
+
+<h3 id="k8s-em-prática-subindo-um-wordpress-completo">K8S em prática subindo um wordpress completo</h3>
+
+<p>Nosso aplicação que irá rodar no kubernetes vai ser um wordpress um dos principais cms do mundo. Teremos a seguinte arquitetura:</p>
+
+<p><img alt="wordpress no k8s arquitetura" src="/img/posts/2020/06/wp-k8s.jpg" style="max-width: 992px;width: 100%;" /></p>
+
+<p>No exemplo anterior a gente utilizou o objeto Pod que é o objeto mais genérico do k8s. <a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/">Aqui na documentação você tem todos os detalhes</a>. Agora nesse exemplo vamos utilizar o <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/">Deployment</a> para criar um Pod mais inteligente dizendo em seu manifesto a quantidade de réplicas que devem sempre executar em nosso cluster. Isso mesmo, o k8s com base no manifesto vai gerenciar a execução desse pod podendo remover e recriar o mesmo caso alguma coisa de errado aconteça. Vamos a esse manifesto:</p>
+
+<p>Crie o arquivo wp-deployment.yaml com o seguinte conteúdo abaixo:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">wordpress-escalavel</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">3</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">wordpress-escalavel</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">wordpress-escalavel</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">wordpress</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">wordpress:5.4.2-php7.2-apache</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">80</span>
+</code></pre></div></div>
+
+<p>Agora vamos subir o nosso primeiro deployment!</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl apply <span class="nt">-f</span> wp-deployment.yaml
+</code></pre></div></div>
+
+<p>Sim temos 3 pods em execução vamos olhar rodando o comando get:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl get pods <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>wordpress-escalavel
+NAME READY STATUS RESTARTS AGE
+meu-blog-escalavel-69f498dc5b-25zb7 1/1 Running 0 19s
+meu-blog-escalavel-69f498dc5b-7dx4z 1/1 Running 0 19s
+meu-blog-escalavel-69f498dc5b-zbtvs 1/1 Running 0 19s
+</code></pre></div></div>
+
+<p>Agora vamos brincar com o k8s vamos deletar o um dos Pods criados e ficar dando o get para ver o que esta irá acontecer.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl delete pod meu-blog-escalavel-69f498dc5b-c7hvd
+pod <span class="s2">"meu-blog-escalavel-69f498dc5b-c7hvd"</span> deleted
+
+<span class="nv">$ </span>kubectl get pods <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>wordpress-escalavel
+NAME READY STATUS RESTARTS AGE
+meu-blog-escalavel-69f498dc5b-7dx4z 1/1 Running 0 4m33s
+meu-blog-escalavel-69f498dc5b-c7hvd 0/1 Terminating 0 36s
+meu-blog-escalavel-69f498dc5b-jb424 1/1 Running 0 6s
+meu-blog-escalavel-69f498dc5b-zbtvs 1/1 Running 0 4m33s
+</code></pre></div></div>
+
+<p>Caso algum pode seja deletado o k8s sobe outro o mais rápido possível e mantém sempre o que está configurado no manifesto do arquivo wp-deployment.yaml. Agora vamos explorar novos comandos que os deployments tem que é o <a href="https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#scale">kubectl scale</a>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl scale deployment meu-blog-escalavel <span class="nt">--replicas</span><span class="o">=</span>5
+
+<span class="nv">$ </span>kubectl get pods <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>wordpress-escalavel
+
+NAME READY STATUS RESTARTS AGE
+meu-blog-escalavel-69f498dc5b-66bbr 1/1 Running 0 7s
+meu-blog-escalavel-69f498dc5b-7dx4z 1/1 Running 0 22h
+meu-blog-escalavel-69f498dc5b-jb424 1/1 Running 0 22h
+meu-blog-escalavel-69f498dc5b-x57f8 1/1 Running 0 7s
+meu-blog-escalavel-69f498dc5b-zbtvs 1/1 Running 0 22h
+</code></pre></div></div>
+
+<p>Pronto nosso sistema do wordpress está escalável podendo subir ou diminuir réplicas. Agora falta a gente configurar o nosso load balancer, que no caso do k8s será o <a href="https://kubernetes.io/docs/concepts/services-networking/service/">Service</a>. Este é responsável em localizar o nosso deployment e expor o serviço do mesmo através de um endereço tendo o funcionamento comparado ao de um load balancer distribuindo a carga. Vamos a esse manifesto:</p>
+
+<p>Crie o arquivo wp-service.yaml com o seguinte conteúdo abaixo:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel-service</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">type</span><span class="pi">:</span> <span class="s">LoadBalancer</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">wordpress-escalavel</span>
+  <span class="na">ports</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">protocol</span><span class="pi">:</span> <span class="s">TCP</span>
+      <span class="na">port</span><span class="pi">:</span> <span class="m">8080</span>
+      <span class="na">targetPort</span><span class="pi">:</span> <span class="m">80</span>
+</code></pre></div></div>
+
+<p>Agora vamos subir o nosso primeiro service!</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl apply <span class="nt">-f</span> wp-service.yaml
+</code></pre></div></div>
+
+<p>Para visualizar o nosso service executando rodamos o comando get mas agora incluindo o tipo service. Sim o k8s segue um padrão e trocando o kind você lista somente os pods de um tipo específico.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl get service
+
+NAME TYPE CLUSTER-IP EXTERNAL-IP PORT<span class="o">(</span>S<span class="o">)</span> AGE
+meu-blog-escalavel-service ClusterIP 10.102.166.220 localhost 8080/TCP 7m57s
+</code></pre></div></div>
+
+<p>Agora todos os nossos deployments ficam acessíveis através do service recém criado que consegue localizar os pods por conta da configuração de selector que utiliza o label aplicado a um pod para localizar para onde a requisição deve chegar. Agora basta chamar localhost:8080 que vamos bater no service e o mesmo redireciona o tráfego para os nossos deployments como um load balancer. Agora que já temos o nosso LB e wordpress de pé precisamos subir o nosso banco de dados. Vamos a esse manifesto:</p>
+
+<p>Crie o arquivo wp-mariadb.yaml com o seguinte conteúdo abaixo:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+  <span class="na">strategy</span><span class="pi">:</span>
+    <span class="na">type</span><span class="pi">:</span> <span class="s">Recreate</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">rtancman/mariadb-local</span>
+        <span class="na">imagePullPolicy</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Always"</span>
+        <span class="na">env</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_ROOT_PASSWORD</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">adminroot</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_USER</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">wp-user</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_PASSWORD</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">q1w2e3r4</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MYSQL_DATABASE</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">wp-k8s</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">3306</span>
+          <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+</code></pre></div></div>
+
+<p>Com isso agora como já sabemos, falta criar o nosso service e vamos lá! Crie o arquivo wp-mariadb-service.yaml com o seguinte conteúdo abaixo:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">mariadb-service</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">type</span><span class="pi">:</span> <span class="s">LoadBalancer</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">mariadb-wp</span>
+  <span class="na">ports</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">protocol</span><span class="pi">:</span> <span class="s">TCP</span>
+      <span class="na">port</span><span class="pi">:</span> <span class="m">3306</span>
+      <span class="na">targetPort</span><span class="pi">:</span> <span class="m">3306</span>
+</code></pre></div></div>
+
+<p>Agora vamos dar apply em todos os manifestos recém criados:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">$ kubectl apply -f wp-mariadb.yaml</span>
+<span class="s">$ kubectl apply -f wp-mariadb-service.yaml</span>
+</code></pre></div></div>
+<p>Agora temos o nosso banco rodando! Com isso vamos alterar o nosso manifesto do wp-deployment.yaml para incluir as variáveis de ambiente que tem o acesso ao banco de dados.</p>
+
+<p>Altere o arquivo wp-deployment.yaml com o seguinte conteúdo abaixo:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">meu-blog-escalavel</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">wordpress-escalavel</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">3</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">wordpress-escalavel</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">wordpress-escalavel</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">wordpress</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">wordpress:5.4.2-php7.2-apache</span>
+        <span class="na">env</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_HOST</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">mariadb-service</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_USER</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">wp-user</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_PASSWORD</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">q1w2e3r4</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">WORDPRESS_DB_NAME</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">wp-k8s</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">80</span>
+</code></pre></div></div>
+
+<p>MEUS PARABÉNS! Você acabou de configurar a nossa arquitetura proposta no exemplo e tudo esta deve estar rodando normalmente se você acessar o <a href="http://localhost:8080/">http://localhost:8080/</a> deve cair na página de configuração do wordpress e seguindo os passos você terá o mesmo rodando no seu cluster k8s \o/.</p>
+
+<p>Kubernetes é uma ferramenta com muitos plugins e serviços e irei fazer um novo post melhorando essa nossa arquitetura utilizando outros objetos do k8s como o <a href="https://kubernetes.io/docs/concepts/configuration/secret/">Secrets</a>, <a href="https://kubernetes.io/docs/concepts/configuration/configmap/">Configmap</a>, <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistent-volumes">PersistentVolume</a> e <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims">PersistentVolumeClaim</a>.</p>
+
+<p>Referências:</p>
+<ul>
+  <li><a href="https://kubernetes.io/docs/concepts/">https://kubernetes.io/docs/concepts/</a></li>
+  <li><a href="https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume/">https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume/</a></li>
+  <li><a href="https://xebia.com/blog/running-kubernetes-locally-docker-mac-os-x/">https://xebia.com/blog/running-kubernetes-locally-docker-mac-os-x/</a></li>
+  <li><a href="https://medium.com/containers-101/local-kubernetes-for-mac-minikube-vs-docker-desktop-f2789b3cad3a">https://medium.com/containers-101/local-kubernetes-for-mac-minikube-vs-docker-desktop-f2789b3cad3a</a></li>
+</ul>
+
+<p>Grande abraço xD</p>
+
+
+      
+      <div id="disqus_thread"></div>
+      <script>
+      /**
+      *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+      *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+      
+      var disqus_config = function () {
+        this.page.url = 'https://www.rtancman.com.br/kubernetes/kubernetes-para-iniciantes.html';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://www.rtancman.com.br/kubernetes/kubernetes-para-iniciantes.html'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      };
+
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://rtancman.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      
+      
+      <div class="clearfix">
+
+        
+        <hr />
+        <a class="btn btn-primary float-left" href="/python/criando-sistema-de-notificacoes-com-pywebpush.html" data-toggle="tooltip" data-placement="top" title="Criando um sistema de notificações com  pywebpush">&larr; Previous<span class="d-none d-md-inline"> Post</span></a>
+        
+        
+        <a class="btn btn-primary float-right" href="/carreira/Quero-programar-por-onde-comecar.html" data-toggle="tooltip" data-placement="top" title="Quero programar, por onde começar?">Next<span class="d-none d-md-inline"> Post</span> &rarr;</a>
+        
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+    <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="https://www.twitter.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://www.facebook.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://linkedin.com/in/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; Raffael Tancman 2014 - 2022</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <div id="fb-root"></div>
+<script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+  <script src="/assets/vendor/share-bar/js/share.bar.min.js"></script>
+  <script>
+  new ShareBar({
+    'facebookAppId': '246280775508572',
+    'networks': [
+      'facebook',
+      'twitter',
+      'linkedin',
+    ],
+    buttonFullWidth: 150,
+  });
+  </script>
+
+
+  </body>
+
+</html>

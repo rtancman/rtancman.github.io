@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    Configurar VSCode para JavaScript - Raffael Tancman
+    
+  </title>
+
+  <link rel="icon" type="image/png" href="/img/favicon.png" />
+  
+    <meta property="description" content="Lista de plugins para trabalhar no Visual Studio Code." />
+  
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/vendor/share-bar/css/share.bar.min.css">
+  
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://www.rtancman.com.br/javascript/configurar-vscode-para-javascript.html">
+  <link rel="alternate" type="application/rss+xml" title="Raffael Tancman" href="/feed.xml">
+  
+  <meta property="og:url" content="https://www.rtancman.com.br/javascript/configurar-vscode-para-javascript.html" />
+  <meta property="og:type" content="website" />
+  
+    <meta property="og:title" content="Configurar VSCode para JavaScript - Raffael Tancman" />
+    
+      <meta property="og:description" content="Lista de plugins para trabalhar no Visual Studio Code." />
+    
+    
+      <meta property="og:image" content="https://www.rtancman.com.br/img/posts/2018/11/configurando-vscode-para-javascript-blur.jpg" />
+    
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-RZN9');</script>
+  <!-- End Google Tag Manager -->
+  <!-- Facebook -->
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '246280775508572',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v3.2'
+      });
+      FB.AppEvents.logPageView();   
+    };
+  
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+  <!-- End Facebook -->
+</head>
+
+
+  <body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">Raffael Tancman</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+    <!-- Page Header -->
+
+<header class="masthead" style="background-image: url('/img/posts/2018/11/configurando-vscode-para-javascript-blur.jpg')">
+
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-heading">
+          <h1>Configurar VSCode para JavaScript</h1>
+          
+          <h2 class="subheading">Lista de plugins para trabalhar no Visual Studio Code.</h2>
+          
+          <span class="meta">Posted by <a href="/about">Raffael Tancman</a> on November 19, 2018</span>
+          
+
+<span><i class="fa fa-clock-o fa-inverse" aria-hidden="true"></i> 3 min de leitura</span>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container container-posts">
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      <div class="share-bar" data-url="https://www.rtancman.com.br/javascript/configurar-vscode-para-javascript.html" data-title="Configurar VSCode para JavaScript" data-image-url="https://www.rtancman.com.br/img/posts/2018/11/configurando-vscode-para-javascript-blur.jpg" data-hashtags="#rtancman" style="width: 100%"></div>
+
+      <p><a href="https://code.visualstudio.com">VSCode</a> é um editor de texto free desenvolvido pela <a href="https://github.com/Microsoft">Microsoft</a>. Neste editor podemos instalar e desenvolver diversos plugins para facilitar o desenvolvimento de sistemas em diversas linguagens. Atualmente eu utilizo o VSCode para trabalhar com <a href="https://developer.mozilla.org/bm/docs/Web/JavaScript">JavaScript</a>. Vale dar uma olhada nesse tópico <a href="https://code.visualstudio.com/docs/languages/javascript">JavaScript in Visual Studio Code</a> onde temos diversas dicas de como melhorar o seu editor para trabalhar com JS.</p>
+
+<p>No meu <a href="https://github.com/rtancman/dotfiles">dotfiles</a> eu guardo essa <a href="https://github.com/rtancman/dotfiles/blob/master/sh/common/vscode/extensions">lista de plugins</a> e neste artigo vou detalhar melhor o que cada um deles faz. Vamos a minha lista de plugins:</p>
+
+<ul>
+  <li>nathanchapman.JavaScriptSnippets</li>
+  <li>oderwat.indent-rainbow</li>
+  <li>CoenraadS.bracket-pair-colorizer</li>
+  <li>EQuimper.react-native-react-redux</li>
+  <li>TimonVS.ReactSnippetsStandard</li>
+  <li>wayou.vscode-todo-highlight</li>
+  <li>minhthai.vscode-todo-parser</li>
+  <li>wix.vscode-import-cost</li>
+  <li>humao.rest-client</li>
+  <li>formulahendry.auto-close-tag</li>
+  <li>formulahendry.auto-rename-tag</li>
+  <li>eamodio.gitlens</li>
+  <li>alefragnani.project-manager</li>
+  <li>emmanuelbeziat.vscode-great-icons</li>
+  <li>SirTori.indenticator</li>
+  <li>wakatime</li>
+  <li>Orta.vscode-jest</li>
+  <li>msjsdiag.debugger-for-chrome</li>
+  <li>MS-vsliveshare.vsliveshare</li>
+  <li>cssho.vscode-svgviewer</li>
+</ul>
+
+<p>Segue o resumo do que cada um desses plugins e veja como eles podem facilitar o seu dia a dia.</p>
+
+<h3 id="javascript-snippets">JavaScript Snippets</h3>
+
+<p>Plugin: <a href="https://marketplace.visualstudio.com/items?itemName=nathanchapman.JavaScriptSnippets">https://marketplace.visualstudio.com/items?itemName=nathanchapman.JavaScriptSnippets</a></p>
+
+<p>Como nome sugere, são trechos de códigos utilizados no Visual Studio para agilizar o desenvolvimento de código.</p>
+
+<h3 id="indent-rainbow">Indent-Rainbow</h3>
+
+<p>Plugin: <a href="https://marketplace.visualstudio.com/items?itemName=oderwat.indent-rainbow">https://marketplace.visualstudio.com/items?itemName=oderwat.indent-rainbow</a></p>
+
+<p><img src="/img/posts/2018/11/vscode/vscode-indent-rainbow.png" alt="Indent-Rainbow" /></p>
+
+<p>Uma extensão simples para tornar a indentação do seu código mais legível criando linhas com cores para cada nível.</p>
+
+<h3 id="bracket-pair-colorizer">Bracket Pair Colorizer</h3>
+
+<p>Plugin: <a href="https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer">https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer</a></p>
+
+<p><img src="/img/posts/2018/11/vscode/vscode-coenraads-bracket-pair-colorizer.png" alt="Bracket Pair Colorizer" /></p>
+
+<p>Essa extensão permite que os colchetes correspondentes sejam identificados com cores. O usuário pode definir quais caracteres corresponder e quais cores usar.</p>
+
+<h3 id="react-nativereactredux-snippets-for-es6es7-version-standard">React-Native/React/Redux snippets for es6/es7 version Standard</h3>
+
+<p>Plugin: <a href="https://marketplace.visualstudio.com/items?itemName=EQuimper.react-native-react-redux-snippets-for-es6-es7-version-standard">https://marketplace.visualstudio.com/items?itemName=EQuimper.react-native-react-redux-snippets-for-es6-es7-version-standard</a></p>
+
+<p>Mais um snippet mas focado em React, React Native, Redux e padrões do ES6/ES7.</p>
+
+<h3 id="todo-highlight">TODO Highlight</h3>
+
+<p>Plugin: <a href="https://marketplace.visualstudio.com/items?itemName=wayou.vscode-todo-highlight">https://marketplace.visualstudio.com/items?itemName=wayou.vscode-todo-highlight</a></p>
+
+<p><img src="/img/posts/2018/11/vscode/vscode-TODOHighlight.png" alt="TODO Highlight" /></p>
+
+<p>Para dar um highlight em algumas marcações dos comentários como TODO, FIXME e outras anotações em seu código.</p>
+
+<h3 id="todo-parser">TODO Parser</h3>
+
+<p>Plugin: <a href="https://marketplace.visualstudio.com/items?itemName=minhthai.vscode-todo-parser">https://marketplace.visualstudio.com/items?itemName=minhthai.vscode-todo-parser</a></p>
+
+<p><img src="/img/posts/2018/11/vscode/demo_vscode1.2_todo_parser.gif" alt="TODO Parser" width="992px" /></p>
+
+<p>Analisa todos os TODO marcados em seu código.</p>
+
+<h3 id="import-cost">Import Cost</h3>
+
+<p>Plugin: <a href="https://marketplace.visualstudio.com/items?itemName=wix.vscode-import-cost">https://marketplace.visualstudio.com/items?itemName=wix.vscode-import-cost</a></p>
+
+<p><img src="/img/posts/2018/11/vscode/import-cost.gif" alt="Import Cost" /></p>
+
+<p>Exibe o tamanho dos módulos que você está importando para o seu código em JS.</p>
+
+<h3 id="rest-client">REST Client</h3>
+
+<p>Plugin: <a href="https://marketplace.visualstudio.com/items?itemName=humao.rest-client">https://marketplace.visualstudio.com/items?itemName=humao.rest-client</a></p>
+
+<p>Faça requests direto do VSCode e veja as respostas de cada requisição.</p>
+
+<h3 id="auto-close-tag">Auto Close Tag</h3>
+
+<p>Plugin: <a href="https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-close-tag">https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-close-tag</a></p>
+
+<p><img src="/img/posts/2018/11/vscode/auto_close_tags_usage.gif" alt="Auto Close Tag" width="992px" /></p>
+
+<h3 id="auto-rename-tag">Auto Rename Tag</h3>
+
+<p>Plugin: <a href="https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-rename-tag">https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-rename-tag</a></p>
+
+<p><img src="/img/posts/2018/11/vscode/auto_rename_tag_usage.gif" alt="Auto Rename Tag" width="992px" /></p>
+
+<h3 id="gitlens">GitLens</h3>
+
+<p>Plugin: <a href="https://github.com/eamodio/vscode-gitlens">https://github.com/eamodio/vscode-gitlens</a></p>
+
+<p><img src="/img/posts/2018/11/vscode/gitlens-preview.gif" alt="GitLens" /></p>
+
+<p>Este é um dos meus prediletos! Facilita muito a utilização do git principalmente para fazer diffs e analisar o histórico.</p>
+
+<h3 id="project-manager">Project Manager</h3>
+
+<p>Plugin: <a href="https://marketplace.visualstudio.com/items?itemName=alefragnani.project-manager">https://marketplace.visualstudio.com/items?itemName=alefragnani.project-manager</a></p>
+
+<p>Gerencia projetos no VSCode.</p>
+
+<h3 id="vscode-great-icons">VSCode Great Icons</h3>
+
+<p>Plugin: <a href="https://marketplace.visualstudio.com/items?itemName=emmanuelbeziat.vscode-great-icons">https://marketplace.visualstudio.com/items?itemName=emmanuelbeziat.vscode-great-icons</a></p>
+
+<p><img src="/img/posts/2018/11/vscode/vscode-great-icons.jpg" alt="VSCode Great Icons" width="992px" /></p>
+
+<p>Pacote de icones para o VSCode.</p>
+
+<h3 id="indenticator">Indenticator</h3>
+
+<p>Plugin: <a href="https://marketplace.visualstudio.com/items?itemName=SirTori.indenticator">https://marketplace.visualstudio.com/items?itemName=SirTori.indenticator</a></p>
+
+<p><img src="/img/posts/2018/11/vscode/SirTori_indenticatordemo.gif" alt="Indenticator" /></p>
+
+<p>Facilita a visualização do bloco de código que está identado.</p>
+
+<h3 id="wakatime">WakaTime</h3>
+
+<p>Plugin: <a href="https://marketplace.visualstudio.com/items?itemName=WakaTime.vscode-wakatime">https://marketplace.visualstudio.com/items?itemName=WakaTime.vscode-wakatime</a></p>
+
+<p>Gera métricas e reports automaticamente conforme você for programando no VSCode.</p>
+
+<h3 id="jest">Jest</h3>
+
+<p>Plugin: <a href="https://marketplace.visualstudio.com/items?itemName=Orta.vscode-jest">https://marketplace.visualstudio.com/items?itemName=Orta.vscode-jest</a></p>
+
+<p><img src="/img/posts/2018/11/vscode/vscode-jest.gif" alt="Jest" /></p>
+
+<p>Complemento para Jest no VSCode, com linter, autocompletes e status do test que você esta escrevendo.</p>
+
+<h3 id="debugger-for-chrome">Debugger for Chrome</h3>
+
+<p>Plugin: <a href="https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome">https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome</a></p>
+
+<p>Debugger no VSCode como acontece no console do Chrome. Você precisa instalar o <a href="https://chromedevtools.github.io/debugger-protocol-viewer/">Chrome DevTools Protocol</a> no seu Chrome. Além disso você precisa realizar uma configuração no seu VSCode. Neste caso eu tenho um <a href="https://github.com/rtancman/reactnd-project-cms/blob/master/.vscode/launch.json">exemplo aqui</a>. Abaixo segue o passo a passo:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c">#entrar no diretorio do seu projeto</span>
+
+<span class="nb">mkdir</span> .vscode/
+
+<span class="nb">cd</span> .vscode
+
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s1">'{
+
+"version": "0.2.0",
+
+"configurations": [
+
+{
+
+"name": "Debug CRA Tests",
+
+"type": "node",
+
+"request": "launch",
+
+"runtimeExecutable": "${workspaceRoot}/node_modules/.bin/react-scripts",
+
+"args": [
+
+"test",
+
+"--runInBand",
+
+"--no-cache",
+
+"--env=jsdom"
+
+],
+
+"cwd": "${workspaceRoot}",
+
+"protocol": "inspector",
+
+"console": "integratedTerminal",
+
+"internalConsoleOptions": "neverOpen"
+
+},
+
+{
+
+"name": "Chrome Attach",
+
+"type": "chrome",
+
+"request": "attach",
+
+"port": 9222,
+
+"url": "http://localhost:3000"
+
+}
+
+]
+
+}'</span> <span class="o">&gt;</span> launch.json
+
+</code></pre></div></div>
+
+<h3 id="vs-live-share">VS Live Share</h3>
+
+<p>Plugin: <a href="https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsliveshare">https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsliveshare</a></p>
+
+<p>Muito útil para fazer <a href="https://en.wikipedia.org/wiki/Pair_programming">pair programing</a> remoto!!!! Ele compartilha a sessão do seu projeto no VSCode dando acesso ao código em si e ao terminal.</p>
+
+<h3 id="svg-viewer">SVG Viewer</h3>
+
+<p>Plugin: <a href="https://marketplace.visualstudio.com/items?itemName=cssho.vscode-svgviewer">https://marketplace.visualstudio.com/items?itemName=cssho.vscode-svgviewer</a></p>
+
+<p><img src="/img/posts/2018/11/vscode/cssho.vscode-svgviewerfrom_context.gif" alt="SVG Viewer" /></p>
+
+<p>Renderizar o arquivo .svg como se fosse uma imagem.</p>
+
+<p>Atualmente são estes os plugins que eu estou utilizando.
+Grande abraço!</p>
+
+
+      
+      <div id="disqus_thread"></div>
+      <script>
+      /**
+      *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+      *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+      
+      var disqus_config = function () {
+        this.page.url = 'https://www.rtancman.com.br/javascript/configurar-vscode-para-javascript.html';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://www.rtancman.com.br/javascript/configurar-vscode-para-javascript.html'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      };
+
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://rtancman.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      
+      
+      <div class="clearfix">
+
+        
+        <hr />
+        <a class="btn btn-primary float-left" href="/soudev/setup/setup-de-maquina-para-devs.html" data-toggle="tooltip" data-placement="top" title="Setup de maquina para devs">&larr; Previous<span class="d-none d-md-inline"> Post</span></a>
+        
+        
+        <a class="btn btn-primary float-right" href="/soudev/vim-e-tmux-minha-configuracao.html" data-toggle="tooltip" data-placement="top" title="Vim e tmux">Next<span class="d-none d-md-inline"> Post</span> &rarr;</a>
+        
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+    <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="https://www.twitter.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://www.facebook.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://linkedin.com/in/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; Raffael Tancman 2014 - 2022</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <div id="fb-root"></div>
+<script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+  <script src="/assets/vendor/share-bar/js/share.bar.min.js"></script>
+  <script>
+  new ShareBar({
+    'facebookAppId': '246280775508572',
+    'networks': [
+      'facebook',
+      'twitter',
+      'linkedin',
+    ],
+    buttonFullWidth: 150,
+  });
+  </script>
+
+
+  </body>
+
+</html>

@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    Elasticsearch Debug Remoto - Raffael Tancman
+    
+  </title>
+
+  <link rel="icon" type="image/png" href="/img/favicon.png" />
+  
+    <meta property="description" content="Realizando um debug remoto no Elasticsearch com o IntelliJ IDEA e VSCode" />
+  
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/vendor/share-bar/css/share.bar.min.css">
+  
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://www.rtancman.com.br/elasticsearch/elasticsearch-debug-remoto.html">
+  <link rel="alternate" type="application/rss+xml" title="Raffael Tancman" href="/feed.xml">
+  
+  <meta property="og:url" content="https://www.rtancman.com.br/elasticsearch/elasticsearch-debug-remoto.html" />
+  <meta property="og:type" content="website" />
+  
+    <meta property="og:title" content="Elasticsearch Debug Remoto - Raffael Tancman" />
+    
+      <meta property="og:description" content="Realizando um debug remoto no Elasticsearch com o IntelliJ IDEA e VSCode" />
+    
+    
+      <meta property="og:image" content="https://www.rtancman.com.br/img/posts/2022/10/elasticsearch-debug-remoto.png" />
+    
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-RZN9');</script>
+  <!-- End Google Tag Manager -->
+  <!-- Facebook -->
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '246280775508572',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v3.2'
+      });
+      FB.AppEvents.logPageView();   
+    };
+  
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+  <!-- End Facebook -->
+</head>
+
+
+  <body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">Raffael Tancman</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+    <!-- Page Header -->
+
+<header class="masthead" style="background-image: url('/img/posts/2022/10/elasticsearch-debug-remoto.png')">
+
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-heading">
+          <h1>Elasticsearch Debug Remoto</h1>
+          
+          <h2 class="subheading">Realizando um debug remoto no Elasticsearch com o IntelliJ IDEA e VSCode</h2>
+          
+          <span class="meta">Posted by <a href="/about">Raffael Tancman</a> on October 19, 2022</span>
+          
+
+<span><i class="fa fa-clock-o fa-inverse" aria-hidden="true"></i> 8 min de leitura</span>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container container-posts">
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      <div class="share-bar" data-url="https://www.rtancman.com.br/elasticsearch/elasticsearch-debug-remoto.html" data-title="Elasticsearch Debug Remoto" data-image-url="https://www.rtancman.com.br/img/posts/2022/10/elasticsearch-debug-remoto.png" data-hashtags="#rtancman" style="width: 100%"></div>
+
+      <p>Quem nunca precisou realizar um debug? Essa ferramenta é muito importante para ajudar a entender sistemas e comportamentos inesperados, vulgo bugs!</p>
+
+<p>Trazendo para o mundo da JVM e Elastic, a um tempinho acabei contribuindo para um plugin do elasticsearch, o <a href="https://github.com/o19s/elasticsearch-learning-to-rank">elasticsearch-learning-to-rank</a>, precisei debugar remotamente para entender como as coisas estavam funcionando e acabei encontrando um bug e solucionando em seguida. Neste momento não cheguei a documentar o processo. Recentemente um amigo de trabalho perguntou em como poderia investigar um possível problema de concorrência nos analyzers do elasticsearch e acabei sugerindo o remote debug.</p>
+
+<p>Após esse papo resolvi escrever esse post em PT-BR para documentar esse processo.</p>
+
+<h2 id="configurando-o-ambiente-de-trabalho">Configurando o ambiente de trabalho</h2>
+<p>Meus amores pelo <a href="https://sdkman.io/">sdkman</a> já foram expressados em outros posts do meu blog e por isso no universo JVM recomendo para gerenciar as diversas versões de java, scala, sbt e por aê vai. Neste caso vamos usar o JDK 17.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># instalando o sdkman</span>
+curl <span class="nt">-s</span> <span class="s2">"https://get.sdkman.io"</span> | bash
+
+
+<span class="c"># instalando versões da jdk que precisamos para compilar o elastic</span>
+sdk <span class="nb">install </span>17.0.2-open
+sdk use java 17.0.2-open
+</code></pre></div></div>
+
+<h2 id="baixando--compilando-o-projeto">Baixando &amp; Compilando o projeto</h2>
+
+<p>Vamos utilizar como base a versão 8.4.3 e o git para clonar o projeto e ir para a branch dessa versão.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir </span>elasticsearch-debug 
+<span class="nb">cd </span>elasticsearch-debug
+git clone git@github.com:elastic/elasticsearch.git
+<span class="nb">cd </span>elasticsearch
+git checkout 8.4
+</code></pre></div></div>
+
+<p>Compilando…</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./gradlew localDistro
+</code></pre></div></div>
+
+<p>Se tudo deu certo você deverá ver essa mensagem:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> Task :localDistro
+Elasticsearch distribution installed to ~/elasticsearch-debug/elasticsearch/build/distribution/local/elasticsearch-8.4.3-SNAPSHOT
+
+BUILD SUCCESSFUL <span class="k">in </span>9m
+456 actionable tasks: 456 executed
+</code></pre></div></div>
+
+<h2 id="debugando">Debugando!</h2>
+
+<p>Tenho 2 formas para debugar o elastic que são:</p>
+<ul>
+  <li><a href="#debug-via-gradlew">Debug via gradlew</a></li>
+  <li><a href="#debug-via-docker--java_options">Debug via Docker + JAVA_OPTIONS</a></li>
+</ul>
+
+<p>Eu particularmente gosto de utilizar uma IDE para interagir com o a aplicação em modo debug. Nesse post eu vou demonstrar como podemos fazer nas IDEs abaixo:</p>
+<ul>
+  <li><a href="#debug-no-intellij-idea">IntelliJ IDEA</a></li>
+  <li><a href="#debug-no-vscode">VSCode</a></li>
+</ul>
+
+<h3 id="debug-via-gradlew">Debug via gradlew</h3>
+
+<p>Quando não preciso instalar um plugin de terceiros no elastic gosto de executar na forma mais convencional que é rodando a aplicação em modo debug na JVM.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./gradlew run <span class="nt">--debug-jvm</span>
+</code></pre></div></div>
+
+<p>Após rodar este comando o projeto do elastic vai ficar executando localmente com a opção de debug habilitada. Basta agora dar um <code class="language-plaintext highlighter-rouge">Attach to Process</code> em sua IDE de preferência. Nesse post vou demonstrar como rodar com o <a href="#debug-no-intellij-idea">IntelliJ</a> e no VSCode.</p>
+
+<h3 id="debug-via-docker--java_options">Debug via Docker + JAVA_OPTIONS</h3>
+
+<p>Aqui vamos subir o elastic utilizando o docker mas passando umas variaveis para habilitar o modo debug. Por praticidade eu acabei criando um docker-compose.yml com o seguinte conteúdo:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">2.2'</span>
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">es</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">docker.elastic.co/elasticsearch/elasticsearch:8.4.3</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">es-remote-debug-8-4-3</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">node.name=es-remote-debug-8-4-3</span>
+      <span class="pi">-</span> <span class="s">cluster.name=es-docker-cluster</span>
+      <span class="pi">-</span> <span class="s">discovery.seed_hosts=es-remote-debug-8-4-3</span>
+      <span class="pi">-</span> <span class="s">xpack.security.enabled=false</span>
+      <span class="pi">-</span> <span class="s">cluster.initial_master_nodes=es-remote-debug-8-4-3</span>
+      <span class="pi">-</span> <span class="s">bootstrap.memory_lock=true</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">ES_JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5007</span><span class="nv"> </span><span class="s">-Xms512m</span><span class="nv"> </span><span class="s">-Xmx512m"</span>
+    <span class="na">ulimits</span><span class="pi">:</span>
+      <span class="na">memlock</span><span class="pi">:</span>
+        <span class="na">soft</span><span class="pi">:</span> <span class="s">-1</span>
+        <span class="na">hard</span><span class="pi">:</span> <span class="s">-1</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">es_data:/usr/share/elasticsearch/data</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">9200:9200</span>
+      <span class="pi">-</span> <span class="s">5007:5007</span>
+    <span class="na">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">elastic</span>
+
+  <span class="na">kibana</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">docker.elastic.co/kibana/kibana:8.4.3</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">kibana</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">5601:5601</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="na">ELASTICSEARCH_URL</span><span class="pi">:</span> <span class="s">http://es-remote-debug-8-4-3:9200</span>
+      <span class="na">ELASTICSEARCH_HOSTS</span><span class="pi">:</span> <span class="s">http://es-remote-debug-8-4-3:9200</span>
+    <span class="na">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">elastic</span>
+
+<span class="na">volumes</span><span class="pi">:</span>
+  <span class="na">es_data</span><span class="pi">:</span>
+    <span class="na">driver</span><span class="pi">:</span> <span class="s">local</span>
+
+<span class="na">networks</span><span class="pi">:</span>
+  <span class="na">elastic</span><span class="pi">:</span>
+    <span class="na">driver</span><span class="pi">:</span> <span class="s">bridge</span>
+</code></pre></div></div>
+
+<p>Após criar o arquivo <code class="language-plaintext highlighter-rouge">docker-compose.yml</code>, vamos rodar o comando para subir os containers:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose up <span class="nt">-d</span>
+</code></pre></div></div>
+
+<p>Pronto! O elastic vai ficar executando localmente com a opção de debug habilitada. Basta agora dar um <code class="language-plaintext highlighter-rouge">Attach to Process</code> em sua IDE de preferência.</p>
+
+<h3 id="debug-no-intellij-idea">Debug no IntelliJ IDEA</h3>
+
+<p>Vamos configurar o projeto do elastic para abrir no IntelliJ.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./gradlew idea
+</code></pre></div></div>
+
+<p>Após essa execução basta <a href="https://www.jetbrains.com/help/idea/import-project-or-module-wizard.html#import-project">importar o projeto para o IntelliJ</a>. Após a importação vamos executar novamente:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./gradlew run <span class="nt">--debug-jvm</span>
+
+<span class="c"># ou rodando com o Docker + JAVA_OPTIONS</span>
+docker-compose up <span class="nt">-d</span>
+</code></pre></div></div>
+
+<p>Agora é ir no menu <code class="language-plaintext highlighter-rouge">Run &gt; Debug &gt; Debug Elasticsearch</code>. Se tudo deu certo seu console de debug no IntelliJ vai ter a seguinte menssagem:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Connected to the target VM, address: <span class="s1">'localhost:5007'</span>, transport: <span class="s1">'socket'</span>
+</code></pre></div></div>
+
+<p>Para testar se tudo esta funcionando, vamos colocar um breakpoint no arquivo <code class="language-plaintext highlighter-rouge">server/src/main/java/org/elasticsearch/rest/RestController.java</code> na função abaixo:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">dispatchRequest</span><span class="o">(</span><span class="nc">RestRequest</span> <span class="n">request</span><span class="o">,</span> <span class="nc">RestChannel</span> <span class="n">channel</span><span class="o">,</span> <span class="nc">ThreadContext</span> <span class="n">threadContext</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// COLOCAR BREAKPOINT NESSA LINHA ABAIXO!!!</span>
+        <span class="n">threadContext</span><span class="o">.</span><span class="na">addResponseHeader</span><span class="o">(</span><span class="no">ELASTIC_PRODUCT_HTTP_HEADER</span><span class="o">,</span> <span class="no">ELASTIC_PRODUCT_HTTP_HEADER_VALUE</span><span class="o">);</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">tryAllHandlers</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="n">channel</span><span class="o">,</span> <span class="n">threadContext</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">channel</span><span class="o">.</span><span class="na">sendResponse</span><span class="o">(</span><span class="k">new</span> <span class="nc">RestResponse</span><span class="o">(</span><span class="n">channel</span><span class="o">,</span> <span class="n">e</span><span class="o">));</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">inner</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">inner</span><span class="o">.</span><span class="na">addSuppressed</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+                <span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="s">"failed to send failure response for uri ["</span> <span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="na">uri</span><span class="o">()</span> <span class="o">+</span> <span class="s">"]"</span><span class="o">,</span> <span class="n">inner</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+<p>Segue o link do arquivo no repositório do github <a href="https://github.com/elastic/elasticsearch/blob/8.4/server/src/main/java/org/elasticsearch/rest/RestController.java#L308">RestController</a></p>
+
+<p>Executamos um curl de teste para a API de <code class="language-plaintext highlighter-rouge">_search</code> e sua IDE deve saltar na tela com o debug travado nessa linha para seguir navegando!</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-u</span> elastic:password localhost:9200/_search
+</code></pre></div></div>
+<h3 id="debug-no-vscode">Debug no VSCode</h3>
+
+<p>Basta abrir o projeto no VSCode utilizando o comando no seu terminal:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>elasticsearch-debug/elasticsearch
+code <span class="nb">.</span>
+</code></pre></div></div>
+
+<p>Vamos criar o arquivo de configuração para dar um <code class="language-plaintext highlighter-rouge">Attach to Process</code> via VSCode.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> .vscode/
+<span class="nb">touch</span> .vscode/launch.json
+</code></pre></div></div>
+
+<p>Agora edite o arquivo <code class="language-plaintext highlighter-rouge">.vscode/launch.json</code> incluindo o conteudo abaixo:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.2.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"configurations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Elastic Debug Remote"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"request"</span><span class="p">:</span><span class="w"> </span><span class="s2">"attach"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"hostName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"localhost"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"port"</span><span class="p">:</span><span class="w"> </span><span class="mi">5007</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Abra uma aba do terminal indo menu <code class="language-plaintext highlighter-rouge">Terminal &gt; New Terminal</code> e vamos rodar novamente o comando run do gradlew:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./gradlew run <span class="nt">--debug-jvm</span>
+
+<span class="c"># ou rodando com o Docker + JAVA_OPTIONS</span>
+docker-compose up <span class="nt">-d</span>
+</code></pre></div></div>
+
+<p>Com o projeto rodando, vamos no menu <code class="language-plaintext highlighter-rouge">Run &gt; Start Debugging &gt; Elastic Debug Remote</code>.</p>
+
+<p>Vamos colocar um breakpoint no arquivo <code class="language-plaintext highlighter-rouge">server/src/main/java/org/elasticsearch/rest/RestController.java</code> na função abaixo:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">dispatchRequest</span><span class="o">(</span><span class="nc">RestRequest</span> <span class="n">request</span><span class="o">,</span> <span class="nc">RestChannel</span> <span class="n">channel</span><span class="o">,</span> <span class="nc">ThreadContext</span> <span class="n">threadContext</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// COLOCAR BREAKPOINT NESSA LINHA ABAIXO!!!</span>
+        <span class="n">threadContext</span><span class="o">.</span><span class="na">addResponseHeader</span><span class="o">(</span><span class="no">ELASTIC_PRODUCT_HTTP_HEADER</span><span class="o">,</span> <span class="no">ELASTIC_PRODUCT_HTTP_HEADER_VALUE</span><span class="o">);</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">tryAllHandlers</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="n">channel</span><span class="o">,</span> <span class="n">threadContext</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">channel</span><span class="o">.</span><span class="na">sendResponse</span><span class="o">(</span><span class="k">new</span> <span class="nc">RestResponse</span><span class="o">(</span><span class="n">channel</span><span class="o">,</span> <span class="n">e</span><span class="o">));</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">inner</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">inner</span><span class="o">.</span><span class="na">addSuppressed</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+                <span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="s">"failed to send failure response for uri ["</span> <span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="na">uri</span><span class="o">()</span> <span class="o">+</span> <span class="s">"]"</span><span class="o">,</span> <span class="n">inner</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+<p>Segue o link do arquivo no repositório do github <a href="https://github.com/elastic/elasticsearch/blob/8.4/server/src/main/java/org/elasticsearch/rest/RestController.java#L308">RestController</a></p>
+
+<p>Executamos um curl de teste para a API de <code class="language-plaintext highlighter-rouge">_search</code> e sua IDE deve saltar na tela com o debug travado nessa linha para seguir navegando!</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-u</span> elastic:password localhost:9200/_search
+</code></pre></div></div>
+
+<h2 id="conclusão">Conclusão</h2>
+<p>Debugar sempre é o meu último recurso! É um processo demorado! Prefira sempre documentar a sua aplicação utilizando testes unitários! Para mim esses sim expressam a funcionalidade do sistema e tem mais chances de estarem atualizados (rs…). Porém debugar salva vidas em alguns casos.</p>
+
+<p>Se você chegou até aqui parabéns! Agora é brincar de debugar o projeto do elastic para entender tudo no detalhe e assim poder encontrar bugs e ajudar a manter.</p>
+
+<p>Referências:</p>
+<ul>
+  <li><a href="https://www.elastic.co/blog/how-to-debug-elasticsearch-source-code-in-intellij-idea">How to Debug Elasticsearch Source Code in IntelliJ IDEA</a></li>
+  <li><a href="https://gist.github.com/jconwell/1af41535c5ecd2f4a9dd">jconwell Gist - Remotly Debug ElasticSearch in IntelliJ</a></li>
+  <li><a href="https://ocampor.medium.com/development-environment-set-up-for-a-custom-elasticsearch-plugin-266c0df6bbdd">Development Environment Set-up for a Custom Elasticsearch Plugin</a></li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#docker">Install Elasticsearch with Docker</a></li>
+</ul>
+
+
+      
+      <div id="disqus_thread"></div>
+      <script>
+      /**
+      *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+      *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+      
+      var disqus_config = function () {
+        this.page.url = 'https://www.rtancman.com.br/elasticsearch/elasticsearch-debug-remoto.html';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://www.rtancman.com.br/elasticsearch/elasticsearch-debug-remoto.html'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      };
+
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://rtancman.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      
+      
+      <div class="clearfix">
+
+        
+        <hr />
+        <a class="btn btn-primary float-left" href="/elasticsearch/elasticsearch-spark-ingestao-de-dados.html" data-toggle="tooltip" data-placement="top" title="Elasticsearch & Spark">&larr; Previous<span class="d-none d-md-inline"> Post</span></a>
+        
+        
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+    <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="https://www.twitter.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://www.facebook.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://linkedin.com/in/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; Raffael Tancman 2014 - 2022</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <div id="fb-root"></div>
+<script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+  <script src="/assets/vendor/share-bar/js/share.bar.min.js"></script>
+  <script>
+  new ShareBar({
+    'facebookAppId': '246280775508572',
+    'networks': [
+      'facebook',
+      'twitter',
+      'linkedin',
+    ],
+    buttonFullWidth: 150,
+  });
+  </script>
+
+
+  </body>
+
+</html>

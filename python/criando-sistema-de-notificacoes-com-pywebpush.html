@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    Criando um sistema de notificações com  pywebpush - Raffael Tancman
+    
+  </title>
+
+  <link rel="icon" type="image/png" href="/img/favicon.png" />
+  
+    <meta property="description" content="Vamos utilizar o pywebpush para criar uma API de notificações simples." />
+  
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/vendor/share-bar/css/share.bar.min.css">
+  
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://www.rtancman.com.br/python/criando-sistema-de-notificacoes-com-pywebpush.html">
+  <link rel="alternate" type="application/rss+xml" title="Raffael Tancman" href="/feed.xml">
+  
+  <meta property="og:url" content="https://www.rtancman.com.br/python/criando-sistema-de-notificacoes-com-pywebpush.html" />
+  <meta property="og:type" content="website" />
+  
+    <meta property="og:title" content="Criando um sistema de notificações com  pywebpush - Raffael Tancman" />
+    
+      <meta property="og:description" content="Vamos utilizar o pywebpush para criar uma API de notificações simples." />
+    
+    
+      <meta property="og:image" content="https://www.rtancman.com.br/img/posts/2019/03/criando-sistema-de-notificacoes-com-pywebpush.jpg" />
+    
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-RZN9');</script>
+  <!-- End Google Tag Manager -->
+  <!-- Facebook -->
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '246280775508572',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v3.2'
+      });
+      FB.AppEvents.logPageView();   
+    };
+  
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+  <!-- End Facebook -->
+</head>
+
+
+  <body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">Raffael Tancman</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+    <!-- Page Header -->
+
+<header class="masthead" style="background-image: url('/img/posts/2019/03/criando-sistema-de-notificacoes-com-pywebpush.jpg')">
+
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-heading">
+          <h1>Criando um sistema de notificações com  pywebpush</h1>
+          
+          <h2 class="subheading">Vamos utilizar o pywebpush para criar uma API de notificações simples.</h2>
+          
+          <span class="meta">Posted by <a href="/about">Raffael Tancman</a> on March 30, 2019</span>
+          
+
+<span><i class="fa fa-clock-o fa-inverse" aria-hidden="true"></i> 6 min de leitura</span>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container container-posts">
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      <div class="share-bar" data-url="https://www.rtancman.com.br/python/criando-sistema-de-notificacoes-com-pywebpush.html" data-title="Criando um sistema de notificações com  pywebpush" data-image-url="https://www.rtancman.com.br/img/posts/2019/03/criando-sistema-de-notificacoes-com-pywebpush.jpg" data-hashtags="#rtancman" style="width: 100%"></div>
+
+      <p>Esses dias um amigo veio me perguntar no GruPy Blumenau em como criar um sistema de notificações e acabei passando meio que o caminho das pedras que poderia utilizar o <a href="https://firebase.google.com/">Firebase</a> ou utilizar o <a href="https://developer.mozilla.org/en-US/docs/Web/API/notification">notification API</a> para isso. Como eu nunca tinha desenvolvido um sistema para esse caso resolvi então criar um post sobre este tema.</p>
+
+<h2 id="web-push-notifications">Web Push Notifications</h2>
+
+<p>Existe um padrão para realizar esse tipo de operação na web que é o <a href="https://developer.mozilla.org/en-US/docs/Web/API/Push_API">Push API</a>.</p>
+
+<p><img src="/img/posts/2019/03/Push_API.jpg" alt="Push API" /></p>
+
+<p>Basicamente o que acontece é o seguinte:</p>
+
+<ol>
+  <li>O cliente solicita permissão ao navegador para receber notificações</li>
+  <li>O navegador gera uma credencial de acesso e o cliente passa esses dados para o servidor</li>
+  <li>O servidor manda uma notificação com as credenciais para o serviço</li>
+  <li>O serviço notifica os navegadores</li>
+</ol>
+
+<p>Todo este processo utiliza o <a href="https://tools.ietf.org/html/draft-ietf-webpush-protocol-12">Web Push Protocol</a>. Este protocolo descreve como toda essa comunicação deve ser feita e com isso temos um padrão para enviar notificações para os navegadores. O projeto <a href="https://github.com/web-push-libs">web-push-libs</a> tem implementações desse protocolo para diversas linguagens. Neste post vamos utilizar a implementação feita para Python que é o <a href="https://github.com/web-push-libs/pywebpush">pywebpush</a>.</p>
+
+<h2 id="sistema-de-notifição">Sistema de Notifição</h2>
+
+<p>Vamos criar uma API e um site. Todo o código esta disponível no repositorio <a href="https://github.com/rtancman/flask-pywebpush">flask-pywebpush</a>. Além disso apaixonado por Makefile como sou criei todos os comandos que iremos executar nele para saber mais acesse o <a href="https://github.com/rtancman/flask-pywebpush/blob/master/Makefile">arquivo e veja os comandos na íntegra</a>.</p>
+
+<h3 id="api-de-notificação">API de notificação</h3>
+<p>Na nossa API vamos utilizar flask, redis e pywebpush para desenvolver nossa aplicação.</p>
+
+<p>A API armazenará as informações de assinatura dos usuários e distribuirá a chave pública VAPID. VAPID é o curto prazo para Identificação Voluntária do Servidor de Aplicativos, a chave pública gerada será usada através do aplicativo cliente.</p>
+
+<p>Gerando as chaves:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+make generate.vapid
+
+</code></pre></div></div>
+<p>OBS: Estou usando como base <strong>linux</strong> e o <strong>openssl</strong>. Portanto para gerar essas chaves você precisa ter o openssl instalado em sua máquina.</p>
+
+<p>Após rodar o comando vamos ter gerado os seguintes arquivos no diretório <strong>flaskwebpush/certs</strong> no projeto:</p>
+
+<ul>
+  <li>private_key.txt</li>
+  <li>public_key.txt</li>
+  <li>vapid_private.pem</li>
+  <li>vapid_public.pem</li>
+</ul>
+
+<p>Nosso backend terá as seguintes rotas:</p>
+
+<ul>
+  <li>/api/subscribe</li>
+  <li>/api/notify</li>
+  <li>/api/unsubscribe</li>
+</ul>
+
+<h3 id="apisubscribe">/api/subscribe</h3>
+
+<p>Responsável por inscrever o cliente para receber notificações do nosso site. Esta rota atende aos verbos:</p>
+
+<p>GET - Responsável por retornar a chave pública a ser utilizada no cliente que é o nosso site
+POST - Responsável por inscrever o cliente. Aqui recebemos o endereço e as credenciais de acesso para realizar o push de notificação.</p>
+
+<p>Segue o código:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="o">@</span><span class="n">api</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">'/subscribe'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'GET'</span><span class="p">,</span> <span class="s">'POST'</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">subscribe</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">request</span><span class="p">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">"GET"</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s">'public_key'</span><span class="p">:</span> <span class="n">VAPID_PUBLIC_KEY</span><span class="p">})</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">json</span><span class="p">)</span>
+    <span class="n">subscription_info</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s">'endpoint'</span><span class="p">:</span> <span class="n">request</span><span class="p">.</span><span class="n">json</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'endpoint'</span><span class="p">),</span>
+      <span class="s">'keys'</span><span class="p">:</span> <span class="n">request</span><span class="p">.</span><span class="n">json</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'keys'</span><span class="p">),</span>
+      <span class="s">'expiration_time'</span><span class="p">:</span> <span class="n">request</span><span class="p">.</span><span class="n">json</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'expirationTime'</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="n">webpush_key</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="p">.</span><span class="n">uuid4</span><span class="p">())</span>
+    <span class="n">redis_webpush</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span><span class="s">'webpush:subscription:info:{}'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">webpush_key</span><span class="p">),</span> <span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">subscription_info</span><span class="p">))</span>
+    <span class="n">redis_webpush</span><span class="p">.</span><span class="n">sadd</span><span class="p">(</span><span class="s">'webpush:subscriptions'</span><span class="p">,</span> <span class="n">webpush_key</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s">'id'</span><span class="p">:</span> <span class="n">webpush_key</span><span class="p">})</span>
+
+</code></pre></div></div>
+
+<h3 id="apinotify">/api/notify</h3>
+
+<p>Responsável em realizar o push dessa notificação aos clientes inscritos no nosso site. Esta recebe um POST com os dados da mensagem que queremos enviar aos clientes. Segue o código:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="o">@</span><span class="n">api</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">'/notify'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'POST'</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">notify</span><span class="p">():</span>
+    <span class="kn">from</span> <span class="nn">pywebpush</span> <span class="kn">import</span> <span class="n">webpush</span><span class="p">,</span> <span class="n">WebPushException</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">sub_webpush_key</span> <span class="o">=</span> <span class="s">'webpush:subscription:info:{}'</span>
+    <span class="n">message_data</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s">'title'</span><span class="p">:</span> <span class="n">request</span><span class="p">.</span><span class="n">json</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'title'</span><span class="p">),</span>
+      <span class="s">'body'</span><span class="p">:</span> <span class="n">request</span><span class="p">.</span><span class="n">json</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'body'</span><span class="p">),</span>
+      <span class="s">'url'</span><span class="p">:</span> <span class="n">request</span><span class="p">.</span><span class="n">json</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'url'</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">redis_webpush</span><span class="p">.</span><span class="n">smembers</span><span class="p">(</span><span class="s">'webpush:subscriptions'</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sub_key</span> <span class="o">=</span> <span class="n">sub_webpush_key</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">key</span><span class="p">.</span><span class="n">decode</span><span class="p">())</span>
+            <span class="n">sub_val</span> <span class="o">=</span> <span class="n">redis_webpush</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">sub_key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">sub_val</span><span class="p">:</span>
+              <span class="n">webpush</span><span class="p">(</span>
+                  <span class="n">subscription_info</span><span class="o">=</span><span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">sub_val</span><span class="p">),</span>
+                  <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">message_data</span><span class="p">),</span>
+                  <span class="n">vapid_private_key</span><span class="o">=</span><span class="n">VAPID_PRIVATE_KEY</span><span class="p">,</span>
+                  <span class="n">vapid_claims</span><span class="o">=</span><span class="n">VAPID_CLAIMS</span>
+              <span class="p">)</span>
+              <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">except</span> <span class="n">WebPushException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">"{} notification(s) sent"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<h3 id="apiunsubscribe">/api/unsubscribe</h3>
+
+<p>Responsável por descadastrar o cliente que não quer mais receber notificações do nosso site. Recebe um POST com o identificador do cliente para remover. Segue o código:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="o">@</span><span class="n">api</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">'/unsubscribe'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'POST'</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">unsubscribe</span><span class="p">():</span>
+    <span class="n">webpush_key</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="n">json</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'client_uuid'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">webpush_key</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s">'message'</span><span class="p">:</span> <span class="s">'client_uuid is required'</span><span class="p">}),</span> <span class="mi">400</span>
+             <span class="n">redis_webpush</span><span class="p">.</span><span class="n">delete</span><span class="p">(</span><span class="s">'webpush:subscription:info:{}'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">webpush_key</span><span class="p">))</span>
+    <span class="n">redis_webpush</span><span class="p">.</span><span class="n">srem</span><span class="p">(</span><span class="s">'webpush:subscriptions'</span><span class="p">,</span> <span class="n">webpush_key</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s">'message'</span><span class="p">:</span> <span class="s">'unsubscribed'</span><span class="p">})</span>
+
+</code></pre></div></div>
+
+<p>Agora que conhecemos a nossa API vamos rodar o nosso projeto:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+git clone git@github.com:rtancman/flask-pywebpush.git
+
+<span class="nb">cd </span>flask-pywebpush
+
+python3 <span class="nt">-m</span> venv .venv
+
+make setup setup.web
+
+<span class="c"># levando o redis com docker</span>
+make run.redis
+
+<span class="c"># rodando a api</span>
+make run.api
+
+<span class="c"># rodando o site web</span>
+run.web
+
+</code></pre></div></div>
+
+<p>Com a nossa aplicação rodando, abra no seu navegador o endereço <a href="http://127.0.0.1:8080">http://127.0.0.1:8080</a>. Neste link temos o nosso site que foi baseado no projeto <a href="https://github.com/GoogleChromeLabs/web-push-codelab">GoogleChromeLabs/web-push-codelab</a>.</p>
+
+<p>Vamos realizar a ação para se inscrever:</p>
+
+<p><img src="/img/posts/2019/03/notificacoes-clicar-para-receber.gif" alt="Clicando para receber notificações" /></p>
+
+<p>Após clicar no button, vamos ver as credenciais de acesso que são enviadas ao nosso servidor. Após este processo, agora vamos enviar a nossa mensagem pelo servidor e para isso vamos utilizar o curl para fazer o post:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+curl <span class="nt">-X</span> POST <span class="se">\</span>
+  http://127.0.0.1:5000/api/notify <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'cache-control: no-cache'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+	"title": "Minha notificação!",
+	"url": "http://localhost:8080/",
+	"body": "O corpo da minha notificação com a menssagem."
+}'</span>
+
+</code></pre></div></div>
+
+<p>Após realizar este comando você irá receber uma notificação como abaixo:</p>
+
+<p><img src="/img/posts/2019/03/notificacoes-recebendo-notificacao.gif" alt="Recebendo notificações" /></p>
+
+<p>Com isso fechamos por aqui nosso sistema simples de notificação. Para testar a API diretamente do postman basta importar o arquivo <a href="https://github.com/rtancman/flask-pywebpush/flaskwebpush.postman_collection.json">flaskwebpush.postman_collection.json</a>.</p>
+
+<p>Para se aprofundar mais no assunto recomendo a leitura desses links:</p>
+
+<ul>
+  <li><a href="https://developers.google.com/web/fundamentals/push-notifications/">https://developers.google.com/web/fundamentals/push-notifications/</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Push_API">https://developer.mozilla.org/en-US/docs/Web/API/Push_API</a></li>
+  <li><a href="https://serviceworke.rs/web-push.html">https://serviceworke.rs/web-push.html</a></li>
+</ul>
+
+<p>Grande abraço!</p>
+
+
+      
+      <div id="disqus_thread"></div>
+      <script>
+      /**
+      *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+      *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+      
+      var disqus_config = function () {
+        this.page.url = 'https://www.rtancman.com.br/python/criando-sistema-de-notificacoes-com-pywebpush.html';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://www.rtancman.com.br/python/criando-sistema-de-notificacoes-com-pywebpush.html'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      };
+
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://rtancman.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      
+      
+      <div class="clearfix">
+
+        
+        <hr />
+        <a class="btn btn-primary float-left" href="/python/aws/organizando-aws-lambda-escrito-python.html" data-toggle="tooltip" data-placement="top" title="Organizando AWS Lambda escrito em Python">&larr; Previous<span class="d-none d-md-inline"> Post</span></a>
+        
+        
+        <a class="btn btn-primary float-right" href="/kubernetes/kubernetes-para-iniciantes.html" data-toggle="tooltip" data-placement="top" title="Kubernetes para iniciantes">Next<span class="d-none d-md-inline"> Post</span> &rarr;</a>
+        
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+    <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="https://www.twitter.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://www.facebook.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://linkedin.com/in/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; Raffael Tancman 2014 - 2022</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <div id="fb-root"></div>
+<script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+  <script src="/assets/vendor/share-bar/js/share.bar.min.js"></script>
+  <script>
+  new ShareBar({
+    'facebookAppId': '246280775508572',
+    'networks': [
+      'facebook',
+      'twitter',
+      'linkedin',
+    ],
+    buttonFullWidth: 150,
+  });
+  </script>
+
+
+  </body>
+
+</html>

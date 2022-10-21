@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    AWS Lambda + Python - Raffael Tancman
+    
+  </title>
+
+  <link rel="icon" type="image/png" href="/img/favicon.png" />
+  
+    <meta property="description" content="Como criar o setup de um projeto Python para rodar no AWS Lambda." />
+  
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/vendor/share-bar/css/share.bar.min.css">
+  
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://www.rtancman.com.br/python/aws/aws-lambda-e-python.html">
+  <link rel="alternate" type="application/rss+xml" title="Raffael Tancman" href="/feed.xml">
+  
+  <meta property="og:url" content="https://www.rtancman.com.br/python/aws/aws-lambda-e-python.html" />
+  <meta property="og:type" content="website" />
+  
+    <meta property="og:title" content="AWS Lambda + Python - Raffael Tancman" />
+    
+      <meta property="og:description" content="Como criar o setup de um projeto Python para rodar no AWS Lambda." />
+    
+    
+      <meta property="og:image" content="https://www.rtancman.com.br/img/posts/2019/01/aws-lambda-e-python.jpg" />
+    
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-RZN9');</script>
+  <!-- End Google Tag Manager -->
+  <!-- Facebook -->
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '246280775508572',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v3.2'
+      });
+      FB.AppEvents.logPageView();   
+    };
+  
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+  <!-- End Facebook -->
+</head>
+
+
+  <body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">Raffael Tancman</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+    <!-- Page Header -->
+
+<header class="masthead" style="background-image: url('/img/posts/2019/01/aws-lambda-e-python.jpg')">
+
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-heading">
+          <h1>AWS Lambda + Python</h1>
+          
+          <h2 class="subheading">Como criar o setup de um projeto Python para rodar no AWS Lambda.</h2>
+          
+          <span class="meta">Posted by <a href="/about">Raffael Tancman</a> on January 09, 2019</span>
+          
+
+<span><i class="fa fa-clock-o fa-inverse" aria-hidden="true"></i> 10 min de leitura</span>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container container-posts">
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      <div class="share-bar" data-url="https://www.rtancman.com.br/python/aws/aws-lambda-e-python.html" data-title="AWS Lambda + Python" data-image-url="https://www.rtancman.com.br/img/posts/2019/01/aws-lambda-e-python.jpg" data-hashtags="#rtancman" style="width: 100%"></div>
+
+      <p>Vamos falar de AWS, vamos falar de lambdas e de python! Isso mesmo, nesse artigo vou começar uma série de posts sobre essas tecnologias.</p>
+
+<p>A AWS é uma plataforma de serviços em cloud com as mais variadas funções. Neste artigo vamos abordar o <a href="https://aws.amazon.com/lambda">AWS Lambda</a>. O Lambda é um serviço que permite você rodar códigos sem ter a necessidade de ter uma máquina ligada o tempo todo. O lambda é executado através de gatilhos que são configurados no serviço. Atualmente podemos rodar códigos nas seguintes linguagens:</p>
+
+<ul>
+  <li><a href="https://docs.aws.amazon.com/pt_br/lambda/latest/dg/python-programming-model.html">Python</a></li>
+  <li><a href="https://docs.aws.amazon.com/pt_br/lambda/latest/dg/java-programming-model.html">Java</a></li>
+  <li><a href="https://docs.aws.amazon.com/pt_br/lambda/latest/dg/go-programming-model.html">Go</a></li>
+  <li><a href="https://docs.aws.amazon.com/pt_br/lambda/latest/dg/dotnet-programming-model.html">C#</a></li>
+  <li><a href="https://docs.aws.amazon.com/pt_br/lambda/latest/dg/lambda-ruby.html">Ruby</a></li>
+</ul>
+
+<p>Vamos utilizar o Python para exemplificar como podemos utilizar o lambda. Antes de começar a executar este serviço precisamos entender o contrato que serviço determinou para a sua utilização. Todo código a ser executado precisa estar dentro de uma função de inicialização que recebe 2 argumentos que são o event e o context. A estrutura da função fica nesse formato:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">def</span> <span class="nf">handler_name</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>  
+<span class="p">...</span>  
+<span class="k">return</span> <span class="n">some_value</span>
+
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p><strong>event:</strong> É o parâmetro principal. Neste argumento recebemos os dados envidados pelos serviços da AWS podendo conter dados de uma mensagem recebida no <a href="https://aws.amazon.com/sqs">SQS</a> e até mesmo dados de um request repassado pelo <a href="https://aws.amazon.com/api-gateway/">API Gateway</a>.</p>
+  </li>
+  <li>
+    <p><strong>context:</strong> Neste recebemos um objeto LambdaContext. Temos neste objeto informações do contexto de invocação deste lambda como a quantidade de memória configurada até o ARN de quem invocou esta função. <a href="https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html">Aqui temos uma explicação detalhada deste objeto.</a></p>
+  </li>
+</ul>
+
+<p>Caso você queira saber mais sobre essa estrutura do serviço de uma olhada <a href="https://docs.aws.amazon.com/pt_br/lambda/latest/dg/python-programming-model-handler-types.html">neste item da documentação do lambda.</a></p>
+
+<p>Agora que já conhecemos a estrutura do lambda vamos criar uma função e para isso temos duas opções via console da AWS ou via terminal utilizando o <a href="https://aws.amazon.com/cli/">awscli</a>.</p>
+
+<p>Vamos explorar o console da AWS primeiramente. Acessando o serviço vamos encontra esta tela inicial:</p>
+
+<p><img src="/img/posts/2019/01/awslambda/1-aws-lambda-telainicial.gif" alt="aws lambda tela inicial" /></p>
+
+<p>Atualmente temos na tela de entrada do lambda um sandbox utilizando JS para brincar com o lambda e de fato rodar o seu primeiro “Hello World”. Mas vamos explorar a criação de uma nova função.</p>
+
+<p>Na criação de uma função lambda temos opções para From Scratch, Blueprints e AWS Serveless Aplication Repository.</p>
+
+<ul>
+  <li>
+    <p><strong>From Scratch:</strong> É para criar funções do zero.</p>
+  </li>
+  <li>
+    <p><strong>Blueprints:</strong> São exemplos de funções para atividades recorrentes na AWS.</p>
+  </li>
+  <li>
+    <p><strong>AWS Serveless Aplication Repository:</strong> São exemplos de aplicações Serverless. Neste temos exemplos de arquiteturas utilizando os serviços da AWS e você consegue facilmente instalar e rodar.</p>
+  </li>
+</ul>
+
+<p>Nosso foco aqui é mostrar a utilização do lambda From Scratch. Vamos criar uma função lambda com suporte a linguagem python na versão 3.7. O lambda precisa de uma role para execução e você pode criar <a href="https://docs.aws.amazon.com/pt_br/lambda/latest/dg/intro-permission-model.html">seguindo essa documentação</a>. Para o nosso exemplo vamos criar uma AWSLambdaBasicExecutionRole.
+<img src="/img/posts/2019/01/awslambda/2-aws-lambda-criando-role.gif" alt="aws lambda criando role" /></p>
+
+<p>Lembrando que você também pode utilizar as templates disponíveis para o serviço que você vai ligar a sua função lambda.
+<img src="/img/posts/2019/01/awslambda/3-aws-lambda-criando-role-seguindo-templates.gif" alt="aws lambda criando role seguindo templates" /></p>
+
+<p>Com a nossa role criada vamos ao que interessa e criar a nossa função lambda!
+<img src="/img/posts/2019/01/awslambda/4-aws-lambda-criando.gif" alt="aws lambda criando" /></p>
+
+<p>Após a criação da função vamos cair na tela configuração da função. Aqui podemos escolher os serviços que vão ser os gatilhos para rodar o nosso lambda, podemos trocar o runtime para outras linguagens, setar variáveis de ambientes, quantidade de memória, tempo máximo de execução, escrever o nosso código em um editor web e colocar a nossa função para executar rodando testes. Fiz um video curto explicando esse console do lambda. Veja abaixo:</p>
+
+<style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style>
+<div class="embed-container">    <iframe title="YouTube video player" width="640" height="390" src="//www.youtube.com/embed/Mr2XT_6HPSo" frameborder="0" allowfullscreen=""></iframe></div>
+
+<p>Vamos de <a href="https://aws.amazon.com/pt/cli/?nc1=h_ls">awscli</a>, terminal!!! Como a maioria dos serviços da AWS temos uma interface de linha de comando. Para isso você vai precisar instalar essa ferramenta em sua máquina. O awscli é feito em Python &lt;3 e por esse motivo vou utilizar o pip para a sua instalação. <a href="https://docs.aws.amazon.com/pt_br/cli/latest/userguide/cli-chap-install.html">Neste link você tem acesso a documentação da AWS explicando como instalar.</a> Segue o comando para instalar usando o pip:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+pip <span class="nb">install </span>awscli
+
+<span class="c">#validando se o awscli foi instalado corretamente</span>
+
+aws <span class="nt">--version</span>
+
+</code></pre></div></div>
+
+<p>Com tudo instalado agora vamos precisar configurar a sua conta e para isso vamos rodar o seguinte comando:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+aws configure
+
+</code></pre></div></div>
+
+<p>Após rodar esse comando vamos precisar colocar o seu AWS Access Key ID, AWS Secret Access Key, uma região default e o formato de output.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+AWS Access Key ID <span class="o">[</span>None]: AKIAIOSFODNN7EXAMPLE
+AWS Secret Access Key <span class="o">[</span>None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+Default region name <span class="o">[</span>None]: us-west-2
+Default output format <span class="o">[</span>None]: json
+
+</code></pre></div></div>
+
+<p><a href="https://docs.aws.amazon.com/pt_br/cli/latest/userguide/cli-chap-configure.html">Nesse link você encontra a documentação completa e mais detalhes para realizar essa configuração.</a></p>
+
+<p>Com tudo configurado vamos dar uma olhada nos comandos do lambda rodando:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+aws lambda <span class="nb">help</span>
+
+</code></pre></div></div>
+
+<p><img src="/img/posts/2019/01/awslambda/5-aws-lambda-cli-help.gif" alt="aws lambda cli help" /></p>
+
+<p>No help temos todos os comandos disponíveis para configurar o serviço pelo terminal. Vamos focar nesse artigo nos seguintes comandos:</p>
+
+<ul>
+  <li>aws lambda create-function</li>
+  <li>aws lambda list-functions</li>
+  <li>aws lambda update-function-code</li>
+  <li>aws lambda invoke</li>
+  <li>aws lambda delete-function</li>
+</ul>
+
+<p>aws lambda create-function
+Como o nome já diz é função utilizada para criar uma função lambda. Vamos ao comando:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+aws lambda create-function <span class="se">\</span>
+<span class="nt">--region</span> us-east-1 <span class="se">\</span>
+<span class="nt">--handler</span> main.handler <span class="se">\</span>
+<span class="nt">--runtime</span> python3.7 <span class="se">\</span>
+<span class="nt">--function-name</span> <span class="s1">'awscli-create-lambda'</span> <span class="se">\</span>
+<span class="nt">--zip-file</span> fileb://./awsclicreatelambda.zip <span class="se">\</span>
+<span class="nt">--role</span> <span class="s1">'arn:aws:iam::032292203206:role/AWSLambdaBasicExecutionRole'</span>
+
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p><strong>–zip-file:</strong> No caso de subir um zip com menos de 10mb você deve usar o parametro –zip-file fileb://PATH_PARA_O_ZIP</p>
+  </li>
+  <li>
+    <p><strong>–role:</strong> Aqui precisamos pegar a <a href="https://docs.aws.amazon.com/pt_br/general/latest/gr/aws-arns-and-namespaces.html">ARN</a> da role. Neste caso você consegue essa informação acessando a sessão de IAM e navegando até a role e clicando para ver os detalhes dela.</p>
+  </li>
+</ul>
+
+<p>Este é o mínimo de argumentos que você precisa passar no modo cli para criar um lambda. Como pode perceber temos um arquivo .zip que neste exemplo tem o nome de awsclicreatelambda.zip . Exatamente precisamos zipar o nosso arquivo antes de subir nossa função para o lambda. Para zipar precisamos do arquivo que vai conter a nossa função python. Abaixo segue os dados que vamos usar neste exemplo.</p>
+
+<p>Criando o arquivo main.py</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"
+
+def handler(event, context):
+    return {
+        'texto': 'hello world lambda usando awscli',
+    }
+
+"</span> <span class="o">&gt;&gt;</span> main.py
+
+</code></pre></div></div>
+
+<p>Zipando o arquivo main.py</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+zip <span class="nt">-qr</span> awsclicreatelambda.zip main.py
+
+</code></pre></div></div>
+
+<p>Agora que já temos o nosso zip vamos criar a nossa função via awscli.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+aws lambda create-function <span class="se">\</span>
+<span class="nt">--region</span> us-east-1 <span class="se">\</span>
+<span class="nt">--handler</span> main.handler <span class="se">\</span>
+<span class="nt">--runtime</span> python3.7 <span class="se">\</span>
+<span class="nt">--function-name</span> <span class="s1">'awscli-create-lambda'</span> <span class="se">\</span>
+<span class="nt">--zip-file</span> fileb://./awsclicreatelambda.zip <span class="se">\</span>
+<span class="nt">--role</span> <span class="s1">'PEGUE_SUA_ARN'</span>
+
+</code></pre></div></div>
+
+<p>Se tudo ocorreu com sucesso você deve ter recebido uma resposta como essa e agora conseguimos visualizar o nosso lambda no console da aws.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="o">{</span>
+  <span class="s2">"FunctionName"</span>: <span class="s2">"awscli-create-lambda"</span>,
+  <span class="s2">"FunctionArn"</span>: <span class="s2">"arn:aws:lambda:us-east-1:XXXXXXXXX:function:awscli-create-lambda"</span>,
+  <span class="s2">"Runtime"</span>: <span class="s2">"python3.7"</span>,
+  <span class="s2">"Role"</span>: <span class="s2">"arn:aws:iam::XXXXXXXXXXX:role/AWSLambdaBasicExecutionRole"</span>,
+  <span class="s2">"Handler"</span>: <span class="s2">"main.handler"</span>,
+  <span class="s2">"CodeSize"</span>: 254,
+  <span class="s2">"Description"</span>: <span class="s2">""</span>,
+  <span class="s2">"Timeout"</span>: 3,
+  <span class="s2">"MemorySize"</span>: 128,
+  <span class="s2">"LastModified"</span>: <span class="s2">"2019-01-09T20:21:51.059+0000"</span>,
+  <span class="s2">"CodeSha256"</span>: <span class="s2">"tpv2milsG+tB6qZWt4CPbtU4JxUXSxwK0aWsl0lbX6g="</span>,
+  <span class="s2">"Version"</span>: <span class="s2">"</span><span class="nv">$LATEST</span><span class="s2">"</span>,
+  <span class="s2">"TracingConfig"</span>: <span class="o">{</span>
+    <span class="s2">"Mode"</span>: <span class="s2">"PassThrough"</span>
+  <span class="o">}</span>,
+  <span class="s2">"RevisionId"</span>: <span class="s2">"e2d3b109-1312-4eb9-80da-f8c710176541"</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>aws lambda list-functions
+Vamos fazer um double check e listar as funções existentes na AWS.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+aws lambda list-functions
+
+</code></pre></div></div>
+
+<p>Você deve receber uma lista com as configurações de cada lambda como essa aqui abaixo:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="o">{</span>
+  <span class="s2">"Functions"</span>: <span class="o">[</span>
+    <span class="o">{</span>
+      <span class="s2">"FunctionName"</span>: <span class="s2">"helloworld"</span>,
+      <span class="s2">"FunctionArn"</span>: <span class="s2">"arn:aws:lambda:us-east-1:XXX:function:helloworld"</span>,
+      <span class="s2">"Runtime"</span>: <span class="s2">"python3.7"</span>,
+      <span class="s2">"Role"</span>: <span class="s2">"arn:aws:iam::XXXX:role/AWSLambdaBasicExecutionRole"</span>,
+      <span class="s2">"Handler"</span>: <span class="s2">"lambda_function.lambda_handler"</span>,
+      <span class="s2">"CodeSize"</span>: 272,
+      <span class="s2">"Description"</span>: <span class="s2">""</span>,
+      <span class="s2">"Timeout"</span>: 3,
+      <span class="s2">"MemorySize"</span>: 128,
+      <span class="s2">"LastModified"</span>: <span class="s2">"2019-01-08T23:32:13.046+0000"</span>,
+      <span class="s2">"CodeSha256"</span>: <span class="s2">"Amrs9cH7J7bkB5kMuvxiVzodlZCSee1bcSZFN4KjNLs="</span>,
+      <span class="s2">"Version"</span>: <span class="s2">"</span><span class="nv">$LATEST</span><span class="s2">"</span>,
+      <span class="s2">"VpcConfig"</span>: <span class="o">{</span>
+        <span class="s2">"SubnetIds"</span>: <span class="o">[]</span>,
+        <span class="s2">"SecurityGroupIds"</span>: <span class="o">[]</span>,
+        <span class="s2">"VpcId"</span>: <span class="s2">""</span>
+      <span class="o">}</span>,
+      <span class="s2">"Environment"</span>: <span class="o">{</span>
+        <span class="s2">"Variables"</span>: <span class="o">{</span>
+          <span class="s2">"TESTE"</span>: <span class="s2">"LALA"</span>
+        <span class="o">}</span>
+      <span class="o">}</span>,
+      <span class="s2">"TracingConfig"</span>: <span class="o">{</span>
+        <span class="s2">"Mode"</span>: <span class="s2">"PassThrough"</span>
+      <span class="o">}</span>,
+      <span class="s2">"RevisionId"</span>: <span class="s2">"863e4b1e-99cd-4cfc-8f8c-0644af4d5b38"</span>
+    <span class="o">}</span>,
+    <span class="o">{</span>
+      <span class="s2">"FunctionName"</span>: <span class="s2">"awscli-create-lambda"</span>,
+      <span class="s2">"FunctionArn"</span>: <span class="s2">"arn:aws:lambda:us-east-1:XXXXX:function:awscli-create-lambda"</span>,
+      <span class="s2">"Runtime"</span>: <span class="s2">"python3.7"</span>,
+      <span class="s2">"Role"</span>: <span class="s2">"arn:aws:iam::XXXXXXXX:role/AWSLambdaBasicExecutionRole"</span>,
+      <span class="s2">"Handler"</span>: <span class="s2">"main.handler"</span>,
+      <span class="s2">"CodeSize"</span>: 254,
+      <span class="s2">"Description"</span>: <span class="s2">""</span>,
+      <span class="s2">"Timeout"</span>: 3,
+      <span class="s2">"MemorySize"</span>: 128,
+      <span class="s2">"LastModified"</span>: <span class="s2">"2019-01-09T20:21:51.059+0000"</span>,
+      <span class="s2">"CodeSha256"</span>: <span class="s2">"tpv2milsG+tB6qZWt4CPbtU4JxUXSxwK0aWsl0lbX6g="</span>,
+      <span class="s2">"Version"</span>: <span class="s2">"</span><span class="nv">$LATEST</span><span class="s2">"</span>,
+      <span class="s2">"TracingConfig"</span>: <span class="o">{</span>
+        <span class="s2">"Mode"</span>: <span class="s2">"PassThrough"</span>
+      <span class="o">}</span>,
+      <span class="s2">"RevisionId"</span>: <span class="s2">"e2d3b109-1312-4eb9-80da-f8c710176541"</span>
+    <span class="o">}</span>
+  <span class="o">]</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>aws lambda update-function-code
+Para atualizar o codigo lambda basta rodar o seguinte comando:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+aws lambda update-function-code <span class="se">\</span>
+<span class="nt">--region</span> us-east-1 <span class="se">\</span>
+<span class="nt">--function-name</span> <span class="s1">'awscli-create-lambda'</span> <span class="se">\</span>
+<span class="nt">--zip-file</span> fileb://./awsclicreatelambda.zip
+
+</code></pre></div></div>
+
+<p>Este é o output esperado:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="o">{</span>
+  <span class="s2">"FunctionName"</span>: <span class="s2">"awscli-create-lambda"</span>,
+  <span class="s2">"FunctionArn"</span>: <span class="s2">"arn:aws:lambda:us-east-1:XXXX:function:awscli-create-lambda"</span>,
+  <span class="s2">"Runtime"</span>: <span class="s2">"python3.7"</span>,
+  <span class="s2">"Role"</span>: <span class="s2">"arn:aws:iam::XXXX:role/AWSLambdaBasicExecutionRole"</span>,
+  <span class="s2">"Handler"</span>: <span class="s2">"main.handler"</span>,
+  <span class="s2">"CodeSize"</span>: 254,
+  <span class="s2">"Description"</span>: <span class="s2">""</span>,
+  <span class="s2">"Timeout"</span>: 3,
+  <span class="s2">"MemorySize"</span>: 128,
+  <span class="s2">"LastModified"</span>: <span class="s2">"2019-01-09T20:41:49.473+0000"</span>,
+  <span class="s2">"CodeSha256"</span>: <span class="s2">"tpv2milsG+tB6qZWt4CPbtU4JxUXSxwK0aWsl0lbX6g="</span>,
+  <span class="s2">"Version"</span>: <span class="s2">"</span><span class="nv">$LATEST</span><span class="s2">"</span>,
+  <span class="s2">"TracingConfig"</span>: <span class="o">{</span>
+    <span class="s2">"Mode"</span>: <span class="s2">"PassThrough"</span>
+  <span class="o">}</span>,
+  <span class="s2">"RevisionId"</span>: <span class="s2">"2ae6d782-dde0-41d1-8227-db3bfa23d30f"</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>aws lambda invoke
+Executando um lambda precisamos passar o nome da função, o paylod que neste caso tem que ser um json e passar um arquivo onde vai ser escrito a resposta dessa invocação.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+aws lambda invoke <span class="se">\</span>
+<span class="nt">--function-name</span> <span class="s1">'awscli-create-lambda'</span> <span class="se">\</span>
+<span class="nt">--payload</span> <span class="s1">'{}'</span> <span class="se">\</span>
+awsclicreatelambda.output
+
+<span class="c"># para ver o resultado basta agora dar um cat no arquivo</span>
+
+<span class="nb">cat </span>awsclicreatelambda.output
+
+</code></pre></div></div>
+
+<p>aws lambda delete-function</p>
+
+<p>Vamos remover este lambda recem criado rodando o comando delete-function. Este comando não tem output.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+aws lambda delete-function <span class="se">\</span>
+<span class="nt">--region</span> us-east-1 <span class="se">\</span>
+<span class="nt">--function-name</span> <span class="s1">'awscli-create-lambda'</span>
+
+</code></pre></div></div>
+
+<p>Para facilitar também criei este <a href="https://gist.github.com/rtancman/240e67545a4dbde5107cd1dd09df014b">gist no github</a> com todos os comandos que executamos em sequência.</p>
+
+<noscript><pre>400: Invalid request</pre></noscript>
+<script src="https://gist.github.com/240e67545a4dbde5107cd1dd09df014b.js"> </script>
+
+<p>Neste post procurei mostrar o funcionamento básico do lambda e as diversas formas que podemos manipular as nossas funções que podem ser feitas via console da AWS ou utilizando o utilitário awscli. Fique ligado que nos próximos posts vou mostrar como podemos otimizar toda essa configuração utilizando o framework <a href="http://apex.run/">apex</a>.</p>
+
+<p>Veja como <a href="/python/aws/organizando-aws-lambda-escrito-python.html">organizar o ambiente de trabalho com apex.run e entenda as pegadinhas em utilizar Python no AWS Lambda.</a></p>
+
+<p>Comente sobre o que você achou desse post e me conte o você quer saber ou fazer utilizando Python e Lambdas.</p>
+
+<p>Grande abraço!</p>
+
+
+      
+      <div id="disqus_thread"></div>
+      <script>
+      /**
+      *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+      *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+      
+      var disqus_config = function () {
+        this.page.url = 'https://www.rtancman.com.br/python/aws/aws-lambda-e-python.html';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://www.rtancman.com.br/python/aws/aws-lambda-e-python.html'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      };
+
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://rtancman.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      
+      
+      <div class="clearfix">
+
+        
+        <hr />
+        <a class="btn btn-primary float-left" href="/soudev/dia-a-dia-de-um-dev-remoto.html" data-toggle="tooltip" data-placement="top" title="Dia a dia de um dev remoto">&larr; Previous<span class="d-none d-md-inline"> Post</span></a>
+        
+        
+        <a class="btn btn-primary float-right" href="/python/aws/organizando-aws-lambda-escrito-python.html" data-toggle="tooltip" data-placement="top" title="Organizando AWS Lambda escrito em Python">Next<span class="d-none d-md-inline"> Post</span> &rarr;</a>
+        
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+    <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="https://www.twitter.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://www.facebook.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://linkedin.com/in/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; Raffael Tancman 2014 - 2022</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <div id="fb-root"></div>
+<script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+  <script src="/assets/vendor/share-bar/js/share.bar.min.js"></script>
+  <script>
+  new ShareBar({
+    'facebookAppId': '246280775508572',
+    'networks': [
+      'facebook',
+      'twitter',
+      'linkedin',
+    ],
+    buttonFullWidth: 150,
+  });
+  </script>
+
+
+  </body>
+
+</html>

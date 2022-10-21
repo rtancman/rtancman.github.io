@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    Organizando AWS Lambda escrito em Python - Raffael Tancman
+    
+  </title>
+
+  <link rel="icon" type="image/png" href="/img/favicon.png" />
+  
+    <meta property="description" content="Arrumando o ambiente de trabalho com apex.run e explicando as pegadinhas em utilizar Python no AWS Lambda." />
+  
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/vendor/share-bar/css/share.bar.min.css">
+  
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://www.rtancman.com.br/python/aws/organizando-aws-lambda-escrito-python.html">
+  <link rel="alternate" type="application/rss+xml" title="Raffael Tancman" href="/feed.xml">
+  
+  <meta property="og:url" content="https://www.rtancman.com.br/python/aws/organizando-aws-lambda-escrito-python.html" />
+  <meta property="og:type" content="website" />
+  
+    <meta property="og:title" content="Organizando AWS Lambda escrito em Python - Raffael Tancman" />
+    
+      <meta property="og:description" content="Arrumando o ambiente de trabalho com apex.run e explicando as pegadinhas em utilizar Python no AWS Lambda." />
+    
+    
+      <meta property="og:image" content="https://www.rtancman.com.br/img/posts/2019/01/organizando-aws-lambda-escrito-python.jpg" />
+    
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-RZN9');</script>
+  <!-- End Google Tag Manager -->
+  <!-- Facebook -->
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '246280775508572',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v3.2'
+      });
+      FB.AppEvents.logPageView();   
+    };
+  
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+  <!-- End Facebook -->
+</head>
+
+
+  <body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">Raffael Tancman</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+    <!-- Page Header -->
+
+<header class="masthead" style="background-image: url('/img/posts/2019/01/organizando-aws-lambda-escrito-python.jpg')">
+
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-heading">
+          <h1>Organizando AWS Lambda escrito em Python</h1>
+          
+          <h2 class="subheading">Arrumando o ambiente de trabalho com apex.run e explicando as pegadinhas em utilizar Python no AWS Lambda.</h2>
+          
+          <span class="meta">Posted by <a href="/about">Raffael Tancman</a> on January 11, 2019</span>
+          
+
+<span><i class="fa fa-clock-o fa-inverse" aria-hidden="true"></i> 6 min de leitura</span>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container container-posts">
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      <div class="share-bar" data-url="https://www.rtancman.com.br/python/aws/organizando-aws-lambda-escrito-python.html" data-title="Organizando AWS Lambda escrito em Python" data-image-url="https://www.rtancman.com.br/img/posts/2019/01/organizando-aws-lambda-escrito-python.jpg" data-hashtags="#rtancman" style="width: 100%"></div>
+
+      <p>Continuando a série de posts relacionados ao AWS Lambda. Caso você tenha lido o primeiro post ou não conheça este serviço da Amazon, recomendo a leitura do artigo <a href="/python/aws/aws-lambda-e-python.html">AWS Lambda + Python - Como criar o setup de um projeto Python para rodar no AWS Lambda.</a></p>
+
+<p>No meu primeiro contato com o lambda não procurei nenhum framework para organizar o trabalho e apaixonado por <a href="https://en.wikipedia.org/wiki/Make_(software)">Make</a> acabei caindo de cabeça automatizando praticamente todos os comandos do <a href="https://docs.aws.amazon.com/cli/latest/reference/lambda/index.html">awscli lambda</a>. Isso no início foi bem legal e importante para entender bem o serviço e os comandos, mas depois de um tempo, com a complexidade de alguns projetos se tornou algo difícil de se manter. Além disso, por mais simples que o Make seja existem pessoas que não gostam de utilizar essa ferramenta por incrível que pareça. Neste caso, construímos uma API para uma empresa toda utilizando lambdas. Este foi o meu primeiro projeto. Meu time definiu a arquitetura, configuração e o processo de deploy.</p>
+
+<h2 id="apex">Apex</h2>
+
+<p>Conheci essa ferramenta através de um amigo após ter criado um “framework em Make” para gerenciar as ações do lambda. Após alguns testes, entendi o potencial do framework e a sua simplicidade para organizar e gerenciar funções no AWS Lambda. Sem sombras de dúvidas entender os comandos facilitaram o entendimento do <a href="http://apex.run/">apex</a>.</p>
+
+<p>O apex propõe uma estrutura de diretórios para se trabalhar com o lambda. Também foi pensada em uma forma de deployar o seu lambda para ambientes diferentes como staging e production por exemplo. Além disso, a ferramenta simplifica a forma de realizar atualizações e deploys no seu lambda criando arquivos de configurações. Com ele fica simples versionar o projeto. Agora vamos ao que interessa vamos conhecer a ferramenta e depois em seguida vou detalhar os principais comandos. Segue abaixo o vídeo de apresentação do apex:</p>
+
+<style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style>
+<div class="embed-container">    <iframe title="YouTube video player" width="640" height="390" src="//www.youtube.com/embed/PvvlCvfljz0" frameborder="0" allowfullscreen=""></iframe></div>
+
+<p>Agora que conhecemos o apex, vamos aos principais comandos que executamos no video que são eles:</p>
+
+<ul>
+  <li>apex init</li>
+  <li>apex deploy</li>
+  <li>apex list</li>
+</ul>
+
+<h3 id="apex-init">apex init</h3>
+
+<p>Cria a Role na AWS com a configuração mínima de execução do lambda e uma estrutura inicial para se trabalhar com lambdas seguindo este formato:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+├── functions
+│ └── hello
+│   └── index.js
+└── project.json
+
+</code></pre></div></div>
+
+<p>Os comandos deploy e list os nomes são sugestivos e fazem o deploy criando ou atualizando o lambda existente e o outro lista todos os lambdas criados.</p>
+
+<p>Para facilitar o setup de cada linguagem suportada no apex, temos um link na documentação com vários <a href="https://github.com/apex/apex/tree/master/_examples">exemplos de caso de uso que você pode ver clicando neste link.</a></p>
+
+<p>Agora que já temos ideia do que é o apex e como ele funciona, vamos ver como instalar outros pacotes Pythons no nosso lambda.</p>
+
+<h2 id="utilizando-pacotes">Utilizando pacotes</h2>
+
+<p>Sim meus amigos, o lambda suporta instalação de outras bibliotecas em nosso código. Basicamente precisamos instalar as dependências no mesmo diretório onde a nossa função lambda foi criada, zipar todo o conteúdo e subir em seguida para o lambda.</p>
+
+<p>Em outras linguagens como Ruby e JS, as dependências normalmente ficam na raiz do projeto no mesmo nível de diretório onde se encontram os arquivos Gemfile ou Package.json. No Python ao instalar dependências para um projeto precisamos criar uma <a href="https://docs.python.org/3/library/venv.html">virtualenv</a>. E agora como fazer? Então amigos ao invés de rodar o pip instal -r requirements.txt vamos precisar mais um argumento o -t. Esta opção permite a gente passar o caminho onde vão ser criados os arquivos de dependências do nosso projeto. Exemplo:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt <span class="nt">-t</span> CAMINHO_PARA_CRIAR_ARQUIVOS_DEPENDENCIAS
+
+</code></pre></div></div>
+
+<p>Logo basta colocar esse caminho para ser o mesmo onde esta no nosso arquivo main.py que é a nossa função lambda e em seguida zipar e subir tudo como fazemos normalmente. Vejamos o seguinte exemplo para utilizar a lib <a href="http://docs.python-requests.org/en/master/">requests</a> do Python.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c">#criando o arquivo main.py</span>
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"
+import requests
+
+
+def handle(event, context):
+    r = requests.get('https://api.github.com/events')
+    return {
+        'texto': r.text,
+    }
+
+"</span> <span class="o">&gt;&gt;</span> main.py
+
+<span class="c">#criando o requirements.txt</span>
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"requests"</span> <span class="o">&gt;&gt;</span> requirements.txt
+
+<span class="c">#instalando as dependencias para o lambda</span>
+pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt <span class="nt">-t</span> <span class="nb">.</span>
+
+<span class="c"># zipando</span>
+zip <span class="nt">-qr</span> hellorequests.zip <span class="nb">.</span>
+
+<span class="c"># criar a nossa função via awscli.</span>
+aws lambda create-function <span class="se">\</span>
+  <span class="nt">--region</span> us-east-1 <span class="se">\</span>
+  <span class="nt">--handler</span> main.handle <span class="se">\</span>
+  <span class="nt">--runtime</span> python3.7 <span class="se">\</span>
+  <span class="nt">--function-name</span> <span class="s1">'hellorequests'</span> <span class="se">\</span>
+  <span class="nt">--zip-file</span> fileb://./hellorequests.zip <span class="se">\</span>
+  <span class="nt">--role</span> <span class="s1">'PEGUE_SUA_ARN'</span>
+
+</code></pre></div></div>
+
+<p>Pronto tendo feito isso temos o nosso lambda sendo executado incluindo o requests como dependências. Dessa maneira você pode instalar qualquer biblioteca na sua função lambda. <a href="https://docs.aws.amazon.com/pt_br/lambda/latest/dg/lambda-python-how-to-create-deployment-package.html">Aqui neste link você tem a documentação da AWS explicando em detalhes esse processo.</a></p>
+
+<p>Um grande ponto de atenção ao utilizar dependências com linguagens dinâmicas, é que a algumas bibliotecas feitas em Python fazem <a href="https://en.wikipedia.org/wiki/Wrapper_function">wrapper</a> para funções escritas em C e outras funções do SO. Ou seja, o lambda roda em cima de uma <a href="https://aws.amazon.com/pt/amazon-linux-ami/">Amazon Linux AMI</a> com isso podemos ter problemas de compatibilidades ao instalar bibliotecas. É nessa hora que o <a href="https://www.docker.com/">docker</a> entra para nos ajudar! Ou seja, o ideal para não sofrer com esse tipo de problema e realizar a instalação em um <a href="https://docs.aws.amazon.com/pt_br/AmazonECR/latest/userguide/amazon_linux_container_image.html">container que tenha o Amazon Linux AMI</a>. Acessando o <a href="https://hub.docker.com/">hub docker</a> temos acesso a essa imagem que você pode encontrar também por este link [https://hub.docker.com/<em>/amazonlinux/](https://hub.docker.com/</em>/amazonlinux/).</p>
+
+<p>Agora com esse detalhe em mente vamos realizar a nossa instalação utilizando o docker com a imagem da AWS. Vamos fazer os seguintes passos:</p>
+
+<ol>
+  <li>Criar o nosso Dockerfile com as configurações necessários para o Python</li>
+  <li>Rodar o container para instalar as dependências</li>
+  <li>Subir o nosso lambda</li>
+</ol>
+
+<p>Para isso eu criei um gist para mostrar você incluir no seu projeto Python 3.7.</p>
+
+<noscript><pre>400: Invalid request</pre></noscript>
+<script src="https://gist.github.com/4ce09756dd3ffe465ca6000f23496af5.js"> </script>
+
+<p>Agora basta criar os arquivos com base no gist e rodar os seguintes comandos:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+make lambda.docker.build lambda.docker.pkgcreate
+
+<span class="c"># zipando</span>
+
+zip <span class="nt">-qr</span> hellorequests.zip <span class="nb">.</span>
+
+<span class="c"># criar a nossa função via awscli.</span>
+
+aws lambda create-function <span class="se">\</span>
+  <span class="nt">--region</span> us-east-1 <span class="se">\</span>
+  <span class="nt">--handler</span> main.handle <span class="se">\</span>
+  <span class="nt">--runtime</span> python3.7 <span class="se">\</span>
+  <span class="nt">--function-name</span> <span class="s1">'hellorequests'</span> <span class="se">\</span>
+  <span class="nt">--zip-file</span> fileb://./hellorequests.zip <span class="se">\</span>
+  <span class="nt">--role</span> <span class="s1">'PEGUE_SUA_ARN'</span>
+
+</code></pre></div></div>
+
+<p>Com isso você tem um ambiente mais “seguro” para instalar as suas dependências. Vale ainda dar uma olhada no projeto <a href="https://github.com/lambci/docker-lambda">lambda-ci</a> que tem uma variedade de imagens prontas para instalar os seus lambdas. Você ainda pode encontrar mais alguns problemas como algumas bibliotecas específicas e caso isso aconteça comente nesse post que eu vou procurar te ajudar ;)</p>
+
+<p>Resumindo mostrei o funcionamento básico do apex, como instalar as dependencias e ficar atento com os possíveis problemas de incompatibilidade de bibliotecas. Nos próximos posts vou mostrar casos reais de utilização do AWS Lambda criando uma api e consumido tarefas em background utilizando SQS e Kinesis.</p>
+
+<p>Comente sobre o que você achou desse post e me conte o você quer saber ou fazer utilizando Python e Lambdas.</p>
+
+<p>Grande abraço!</p>
+
+
+      
+      <div id="disqus_thread"></div>
+      <script>
+      /**
+      *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+      *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+      
+      var disqus_config = function () {
+        this.page.url = 'https://www.rtancman.com.br/python/aws/organizando-aws-lambda-escrito-python.html';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://www.rtancman.com.br/python/aws/organizando-aws-lambda-escrito-python.html'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      };
+
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://rtancman.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      
+      
+      <div class="clearfix">
+
+        
+        <hr />
+        <a class="btn btn-primary float-left" href="/python/aws/aws-lambda-e-python.html" data-toggle="tooltip" data-placement="top" title="AWS Lambda + Python">&larr; Previous<span class="d-none d-md-inline"> Post</span></a>
+        
+        
+        <a class="btn btn-primary float-right" href="/python/criando-sistema-de-notificacoes-com-pywebpush.html" data-toggle="tooltip" data-placement="top" title="Criando um sistema de notificações com  pywebpush">Next<span class="d-none d-md-inline"> Post</span> &rarr;</a>
+        
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+    <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="https://www.twitter.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://www.facebook.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://linkedin.com/in/rtancman">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; Raffael Tancman 2014 - 2022</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <div id="fb-root"></div>
+<script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+  <script src="/assets/vendor/share-bar/js/share.bar.min.js"></script>
+  <script>
+  new ShareBar({
+    'facebookAppId': '246280775508572',
+    'networks': [
+      'facebook',
+      'twitter',
+      'linkedin',
+    ],
+    buttonFullWidth: 150,
+  });
+  </script>
+
+
+  </body>
+
+</html>
